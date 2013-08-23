@@ -685,3 +685,14 @@ html{
     width: 150px;
     display: inline-block;
 }
+
+
+.welcome a:hover{
+    background-color: white !important;
+    color: black;
+    cursor: default;
+}
+
+.welcome a{
+    color: black;
+}

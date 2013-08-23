@@ -5,8 +5,7 @@
         <f:event listener="#{redirectBean.loggedInRedirect()}" type="preRenderView" />
 
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-        <title>Portfolio</title>
-        <!-- Bootstrap core CSS -->
+        <title>Sell</title>
         <link href="css/bootstrap.css" rel="stylesheet"/>
         <link href="css/custom.css" rel="stylesheet"/>
 
@@ -30,19 +29,13 @@
             </div>
             <div class="tabbable"> <!-- Only required for left/right tabs -->
                 <ul class="nav nav-tabs">
-                    <li class="active"><a  >Portfolio</a></li>
-                    <li><a href="javascript: void();" onclick="window.location.href = 'buy.xhtml?clientId=' + gup('clientId')" >Buy</a></li>
+                    <li><a href="javascript: void();" onclick="window.location.href = 'client.xhtml?clientId=' + gup('clientId')"  >Portfolio</a></li>
+                    <li class="active" ><a href="javascript: void();" >Buy</a></li>
                     <li><a href="javascript: void();" ><span style="color: lightgray;">Sell</span></a></li>
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane active" id="tab1">
-                        <table class="table" id="bondsTable">
-
-                        </table>
-                        <div style="text-align: right;">
-                            <b>Total Value of Portfolio:</b>
-                            <span style="color: firebrick;" id="totalValue" ></span>
-                        </div>
+                        123
                     </div>
 
                 </div>
@@ -74,53 +67,7 @@
                 else    return results[1];
             }
             
-            function generateTableRow(b){
-                if (b == undefined){
-                    return "";
-                }
-                return ' <tr><td>' + b.CUSIP + '</td><td> <button class="sellButton" data-id="' + b.id +'" > SELL</button> </td><td>' + b.price + '</td><td>' + b.parValue + '</td><td>' + b.coupon +'</td><td>' + b.currentYield +'</td><td>' + b.yieldToMaturity +'</td><td>' + b.rating +'</td><td>' + b.quantity +'</td><td>' + b.value +'</td></tr> ';
-            }
             
-            function generateTable(array){
-                if (array == undefined){
-                    return undefined;
-                }
-                s = ' <tr><th>CUSIP</th><th>Select To Sell</th><th>PRICE</th><th>Par Value</th><th>Coupon</th><th>Current Yield</th><th>Yield To Maturity</th><th>Rating</th><th>Quantity</th><th>Value</th></tr> ';
-                for (var i in array){
-                    s+=generateTableRow(array[i]);
-                }
-                return s;
-            }
-            
-            function calculateTotalValueOfPortfolio(array){
-                var s = 0;
-                if (array == undefined){
-                    return 0;
-                }
-                for (var i in array){
-                    s+=array[i].value;
-                }
-                $('#totalValue').text(s);
-            }
-            
-            function loadClientBonds(){
-                $.ajax({
-                    url: "/BLBWeb/resources/admin/getClientBonds?clientId="+ gup("clientId"),
-                    success: function(data){
-                        de = data.data;
-                        if (de != undefined){
-                            $('#resultBlock').show();
-                        }
-                        
-                        $('#bondsTable').html(generateTable(data.data));
-                        calculateTotalValueOfPortfolio(data.data);
-                        
-                        $('.sellButton').bind('click', function(){
-                            window.location.href = "sell.xhtml?clientId="+gup("clientId")+"&bondId="+$(this).attr("data-id");
-                        });
-                    }
-                });
-            }
             
             
             $(function(){

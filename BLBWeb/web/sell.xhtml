@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <f:event listener="#{redirectBean.loggedInRedirect()}" type="preRenderView" />
+
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <title>Sell</title>
+        <link href="css/bootstrap.css" rel="stylesheet"/>
+        <link href="css/custom.css" rel="stylesheet"/>
+
+        <!-- Custom styles for this template -->
+        <link href="css/jumbotron-narrow.css" rel="stylesheet"/>
+        <script type="text/javascript" charset="utf-8" src="js/jquery.min.js"></script>
+        <script type="text/javascript" charset="utf-8" src="js/bootstrap.js"></script>
+        <script type="text/javascript" charset="utf-8" src="js/custom.js"></script>
+
+    </h:head>
+
+    <h:body>
+
+        <div class="container-narrow" style="max-width: 820px; padding: 0px 10px; border-left: 1px solid #b9b9b9; background-color: white; border-right: 1px solid #b9b9b9;">
+            <div class="header">
+                <ul class="nav nav-pills pull-right" style="margin-top: 25px;">
+                    <li class="welcome"> <a href="#"  > Welcome Trader <b>#{traderBean.trader.login} </b> </a> </li>
+                    <li><a href="javascript: void()" onclick="logout();">Log Out</a></li>
+                </ul>
+                <span style="display: inline-block; margin-top: 22px; padding: 10px 0px; ">Client:<b>#{clientBean.client.login} (#{clientBean.client.id})</b> | balance: <b>#{clientBean.client.balance}</b> | <a href="index.xhtml"> Change Client</a></span>
+            </div>
+            <div class="tabbable"> <!-- Only required for left/right tabs -->
+                <ul class="nav nav-tabs">
+                    <li><a href="javascript: void();" onclick="window.location.href = 'client.xhtml?clientId=' + gup('clientId')"  >Portfolio</a></li>
+                    <li><a href="javascript: void();" onclick="window.location.href = 'buy.xhtml?clientId=' + gup('clientId')" >Buy</a></li>
+                    <li  class="active" ><a href="javascript: void();" ><span>Sell</span></a></li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tab1">
+                        <h3>Order Summary</h3>
+                        <div style="display: none; color: red; margin-bottom: 10px;" id="errorBLock" >
+                            We are unable to proceed with the transaction as there is insufficient number of bonds owned in the account.
+                            Please enter the quantity to sell lower than that owned and try again.
+
+                        </div>
+                        <div class="jumbotron" style="border-radius: 20px; margin-bottom: 10px; border: 2px solid darkgrey; padding: 10px; ">
+                            <h:panelGrid columns="3">
+                                <h:panelGroup class="span3">CUSIP: <br/><b>#{bondBean.bond.CUSIP}</b></h:panelGroup>
+                                <h:panelGroup class="span3">Coupon: <br/><b>#{bondBean.bond.coupon}</b></h:panelGroup>
+                                <h:panelGroup class="span3">Quantity Owned: <br/><b id="ownedQuantity" >#{bondBean.bond.quantity}</b></h:panelGroup>
+                                <h:panelGroup class="span3">Price: <br/><b>#{bondBean.bond.price}</b></h:panelGroup>
+                                <h:panelGroup class="span3">Current Yield: <br/><b>#{bondBean.bond.currentYield}</b></h:panelGroup>
+                                <h:panelGroup class="span3">
+                                    Please enter Quantity to Sell
+                                    <input type="text" id="qts" style="width: 70%;" />
+                                </h:panelGroup>
+                                <h:panelGroup class="span3">Par Value: <br/><b>#{bondBean.bond.parValue}</b></h:panelGroup>
+                                <h:panelGroup class="span3">Yield To Maturity: <br/><b>#{bondBean.bond.yieldToMaturity}</b></h:panelGroup>
+                                <h:panelGroup class="span3">Sale Amount: ?</h:panelGroup>
+                                <h:panelGroup class="span3">Rating <br/><b>#{bondBean.bond.rating}</b></h:panelGroup>
+                            </h:panelGrid>
+                        </div>
+                        <div style="text-align: right;">
+                            <button class="btn btn-large" onclick="window.location.href = 'client.xhtml?clientId=' + gup('clientId')" > Cancel Order </button>
+                            <button class="btn btn-large" id="previewButton" onclick="previewOrder()" > Preview Order </button>
+                            <button class="btn btn-large" id="confirmButton" style="display: none;" onclick="confirmOrder()" > Confirm Order </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+
+            <div class="footer">
+                <p style="margin-bottom: 0px;">OLOLO, 2013</p>
+                <div style="display: block; height: 10px;"></div>
+            </div>
+
+
+        </div> <!-- /container -->
+
+
+
+
+        <script>
+            //<![CDATA[
+            
+            function isNumber(n) {
+                return !isNaN(parseFloat(n)) && isFinite(n);
+            }
+            
+            function gup( name ){
+                name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");  
+                var regexS = "[\\?&]"+name+"=([^&#]*)";  
+                var regex = new RegExp( regexS );  
+                var results = regex.exec( window.location.href ); 
+                if( results == null )    return "";  
+                else    return results[1];
+            }
+            
+            function previewOrder(){
+                if (!isNumber($('#qts').val())){
+                    alert("incorrect number");
+                    return;
+                }
+                var owned = $('#ownedQuantity').text().trim();
+                var qts = $('#qts').val();
+                if (qts > owned){
+                    $('#errorBLock').show();
+                    return;
+                }
+                ('#errorBlock').hide();
+                ('#previewButton').hide();
+                ('#confirmButton').show();
+            }
+            
+            function confirmOrder(){
+                
+            }
+            
+            $(function(){
+                
+            });
+            
+            //]]>
+        </script>
+
+
+    </h:body>
+</html>
