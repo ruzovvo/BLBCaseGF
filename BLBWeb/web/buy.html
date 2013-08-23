@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Buy Local Bonds</title>
+    <link href="css/bootstrap.css" rel="stylesheet" media="screen" type="text/css">
+    <script src="js/dygraph-combined.js" type="text/javascript"></script>
+  </head>
+  <body>
+    <div class="container">
+          <div class="navbar">
+            <div class="navbar-inner">
+              
+              <a class="brand" href="#">Buy Local Bonds</a>
+              <ul class="nav pull-right">
+                <li class="dropdown">
+                  <a class="dropdown-toggle" data-toggle="dropdown" href="">
+                    <i class="icon-user"></i> Trader: <b>Ivan Ivanov</b> <b class="caret"></b>
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li><a href="#"><i class="icon-cog"></i> Settings</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#"><i class="icon-off"></i> Logout</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <ul class="nav nav-pills">
+            <li class="span2">
+              <a href="#" class="text-center">Home</a>
+            </li>
+            <li class="active span2"><a href="#" class="text-center">Buy</a></li>
+            <li class="span2"><a href="#" class="text-center">Sell</a></li>
+          </ul>
+
+
+          <div class="row-fluid">
+            <div class="span7">
+            </div> 
+            <div class="span5">
+              <h5 class="text-center"> Bonds search: </h5>
+              <form class="form-horizontal">
+                <div class="control-group">
+                  <label class="control-label" for="inputQuantity"><b>Quantity</b></label>
+                  <div class="controls controls-row">
+                    <input class="input-medium" type="text" id="inputQuantity">
+                  </div>
+                </div>
+                <div class="control-group">
+                  <label class="control-label" for="inputPriceLow"><b>Price</b></label>
+                  <div class="controls controls-row">
+                    <input class="input-mini" type="text" id="inputPriceLow">
+                    <b> to </b>
+                    <input class="input-mini" type="text" id="inputPriceHigh">
+                  </div>
+                </div>
+                <div class="control-group">
+                  <label class="control-label" for="inputPriceLow"><b>Par value</b><br></label>
+                  <div class="controls controls-row">
+                    <input class="input-mini" type="text" id="inputParvalueLow">
+                    <b> to </b>
+                    <input class="input-mini" type="text" id="inputParvalueHigh">
+                  </div>
+                </div>
+                <div class="control-group">
+                  <label class="control-label" for="inputPriceLow"><b>Coupon</b><br></label>
+                  <div class="controls controls-row">
+                    <input class="input-mini" type="text" id="inputCouponLow">
+                    <b> to </b>
+                    <input class="input-mini" type="text" id="inputCouponHigh">
+                  </div>
+                </div>
+                <div class="control-group">
+                  <label class="control-label" for="inputPriceLow"><b>Current Yield</b><br></label>
+                  <div class="controls controls-row">
+                    <input class="input-mini" type="text" id="inputCurrentYieldLow">
+                    <b> to </b>
+                    <input class="input-mini" type="text" id="inputCurrentYieldHigh">
+                  </div>
+                </div>
+                <div class="control-group">
+                  <label class="control-label" for="inputPriceLow"><b>Yield to Maturity</b><br></label>
+                  <div class="controls controls-row">
+                    <input class="input-mini" type="text" id="inputYieldtoMaturityLow">
+                    <b> to </b>
+                    <input class="input-mini" type="text" id="inputYieldtoMaturityHigh">
+                  </div>
+                </div>
+                <div class="control-group">
+                  <p class="text-center"><b>Rating</b></p>
+                  <div class="controls controls-row">
+                    <label class="radio">
+                      <input type="radio" name="ratingOptions" id="ratingOptions1" value="moody" checked>
+                      Moody's
+                    </label>
+                    <select class="span5">
+                      <option>AAA</option>
+                      <option>AA</option>
+                      <option>A</option>
+                    </select>
+                    <select class="span5">
+                      <option>AAA</option>
+                      <option>AA</option>
+                      <option>A</option>
+                    </select>
+                    <!--<input class="input-mini" type="text" id="inputMoodyRatingLow">
+                    <input class="input-mini" type="text" id="inputMoodyRatingHigh">-->
+                  </div>
+                  <div class="controls controls-row">
+                    <label class="radio">
+                      <input type="radio" name="ratingOptions" id="ratingOptions2" value="SnP">
+                      S&amp;P
+                    </label>
+                    <select class="span5">
+                      <option>AAA</option>
+                      <option>AA</option>
+                      <option>A</option>
+                    </select>
+                    <select class="span5">
+                      <option>AAA</option>
+                      <option>AA</option>
+                      <option>A</option>
+                    </select>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+
+    </div>
+      
+
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="js/bootstrap.js"></script>
+  </body>
+</html>

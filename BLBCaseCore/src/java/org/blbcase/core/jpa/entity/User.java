@@ -18,7 +18,9 @@ public class User implements Serializable {
     private Long id;
     private String login;
     private String password;
+    @Enumerated(EnumType.STRING)
     private UserTypeEnum type;
+    private Double balance;
 
     public User(String login, String password, UserTypeEnum type) {
         this.login = login;
@@ -59,6 +61,14 @@ public class User implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(Double balance) {
+        this.balance = balance;
     }
 
     @Override
