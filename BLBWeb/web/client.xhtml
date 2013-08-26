@@ -78,14 +78,15 @@
                 if (b == undefined){
                     return "";
                 }
-                return ' <tr><td>' + b.CUSIP + '</td><td> <button class="sellButton" data-id="' + b.id +'" > SELL</button> </td><td>' + b.price + '</td><td>' + b.parValue + '</td><td>' + b.coupon +'</td><td>' + b.currentYield +'</td><td>' + b.yieldToMaturity +'</td><td>' + b.rating +'</td><td>' + b.quantity +'</td><td>' + b.value +'</td></tr> ';
+                var value = b.quantity * b.price;
+                return ' <tr><td>' + b.CUSIP + '</td><td> <button class="sellButton" data-id="' + b.id +'" > SELL</button> </td><td>' + b.price + '</td><td>' + b.parValue + '</td><td>' + b.coupon +'</td><td>' + b.currentYield +'</td><td>' + b.yieldToMaturity +'</td><td>' + b.rating +'</td><td>' + b.quantity +'</td><td>' + b.boughtOn + '</td><td>' + value +'</td></tr> ';
             }
             
             function generateTable(array){
                 if (array == undefined){
                     return undefined;
                 }
-                s = ' <tr><th>CUSIP</th><th>Select To Sell</th><th>PRICE</th><th>Par Value</th><th>Coupon</th><th>Current Yield</th><th>Yield To Maturity</th><th>Rating</th><th>Quantity</th><th>Value</th></tr> ';
+                s = ' <tr><th>CUSIP</th><th>Select To Sell</th><th>PRICE</th><th>Par Value</th><th>Coupon</th><th>Current Yield</th><th>Yield To Maturity</th><th>Rating</th><th>Quantity</th><th>Bought On</th><th>Value</th></tr> ';
                 for (var i in array){
                     s+=generateTableRow(array[i]);
                 }
@@ -98,7 +99,7 @@
                     return 0;
                 }
                 for (var i in array){
-                    s+=array[i].value;
+                    s+=array[i].price * array[i].quantity;
                 }
                 $('#totalValue').text(s);
             }

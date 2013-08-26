@@ -73,7 +73,8 @@
                 if (b == undefined){
                     return "";
                 }
-                return ' <tr> <td><button class="buyButton" data-id="' + b.id +'" > BUY</button></td><td>' + b.CUSIP + '</td><td>' + b.price + '</td><td>' + b.parValue + '</td><td>' + b.coupon +'</td><td>' + b.currentYield +'</td><td>' + b.yieldToMaturity +'</td><td>' + b.rating +'</td><td>' + b.quantity +'</td><td>' + b.value +'</td></tr> ';
+                var value = b.price * b.quantity;
+                return ' <tr> <td><button class="buyButton" data-id="' + b.id +'" > BUY</button></td><td>' + b.CUSIP + '</td><td>' + b.price + '</td><td>' + b.parValue + '</td><td>' + b.coupon +'</td><td>' + b.currentYield +'</td><td>' + b.yieldToMaturity +'</td><td>' + b.rating +'</td><td>' + b.quantity +'</td><td>' + value +'</td></tr> ';
             }
             
             function generateTable(array){

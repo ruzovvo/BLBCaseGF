@@ -114,16 +114,16 @@ public class AdminResource {
     @Produces("application/json")
     @Path("getFreeBonds")
     public String getFreeBonds(@Context HttpServletRequest req) {
-       // try {
-            //checking rights here
-            //SessionUtils.getCurrentUserIdThrowingException(req);
-            System.out.println("Trying to find available bonds");
-            List<Bond> list = bMan.getFreeBonds();
-            System.out.println("Available Bonds: " + list.size());
-            JsonResponse<List<Bond>> jr = new JsonResponse<List<Bond>>(ResponseConstants.OK, null, list);
-            return SimpleResponseWrapper.getJsonResponse(jr);
-       // } catch (BLBException e) {
-       //    return BLBExceptionWrapper.wrapException(e);
+        // try {
+        //checking rights here
+        //SessionUtils.getCurrentUserIdThrowingException(req);
+        System.out.println("Trying to find available bonds");
+        List<Bond> list = bMan.getFreeBonds();
+        System.out.println("Available Bonds: " + list.size());
+        JsonResponse<List<Bond>> jr = new JsonResponse<List<Bond>>(ResponseConstants.OK, null, list);
+        return SimpleResponseWrapper.getJsonResponse(jr);
+        // } catch (BLBException e) {
+        //    return BLBExceptionWrapper.wrapException(e);
         //}
     }
 
@@ -135,7 +135,8 @@ public class AdminResource {
             //checking rights here
             SessionUtils.getCurrentUserIdThrowingException(req);
             bMan.buyFreeBond(clientId, bondId, quantity);
-            JsonResponse jr = new JsonResponse(ResponseConstants.OK, null, null);
+            JsonResponse<String> jr = new JsonResponse<String>(ResponseConstants.OK, null, ResponseConstants.YES);
+
             return SimpleResponseWrapper.getJsonResponse(jr);
         } catch (BLBException e) {
             return BLBExceptionWrapper.wrapException(e);
@@ -148,9 +149,12 @@ public class AdminResource {
     public String sellBonds(@Context HttpServletRequest req, @QueryParam("clientId") Long clientId, @QueryParam("bondId") Long bondId, @QueryParam("quantity") Integer quantity) {
         try {
             //checking rights here
+            System.out.println("selling bonds");
             SessionUtils.getCurrentUserIdThrowingException(req);
+            System.out.println("logged in");
             bMan.sellBond(clientId, bondId, quantity);
-            JsonResponse jr = new JsonResponse(ResponseConstants.OK, null, null);
+            System.out.println("bonds sold");
+            JsonResponse<String> jr = new JsonResponse<String>(ResponseConstants.OK, null, ResponseConstants.YES);
             return SimpleResponseWrapper.getJsonResponse(jr);
         } catch (BLBException e) {
             return BLBExceptionWrapper.wrapException(e);

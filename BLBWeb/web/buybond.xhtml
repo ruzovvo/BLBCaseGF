@@ -66,6 +66,7 @@
                             <button class="btn btn-large" onclick="window.location.href = 'buy.xhtml?clientId=' + gup('clientId')" > Cancel Order </button>
                             <button class="btn btn-large" id="previewButton" onclick="previewOrder()" > Preview Order </button>
                             <button class="btn btn-large" id="confirmButton" style="display: none;" onclick="confirmOrder()" > Confirm Order </button>
+                            <button class="btn btn-large" id="returnButton" style="display: none;" onclick="window.location.href = 'client.xhtml?clientId=' + gup('clientId')" > Return to homepage </button>
                         </div>
                     </div>
 
@@ -120,7 +121,24 @@
             }
             
             function confirmOrder(){
-                
+                $.ajax({
+                    url: "/BLBWeb/resources/admin/buyBonds?clientId="+ gup("clientId")+"&bondId="+gup("bondId") + "&quantity="+$('#qts').val(),
+                    success: function(data){
+                        de = data.data;
+                        //console.log(data);
+                        //console.log(data.data);
+                        if (de != undefined){
+                            $('#summary').html("Order Summary: Purchase Approved");
+                            $('#returnButton').show();
+                            $('#confirmButton').hide();
+                            $('#cancelButton').hide();
+                        }
+                        else{
+                            console.log(de);
+                        }
+                        
+                    }
+                });
             }
             
             $(function(){

@@ -79,7 +79,7 @@ public class SessionUtils {
 
     public static Long getCurrentUserIdThrowingException(HttpServletRequest req) throws BLBException {
         HttpSession session = req.getSession(false);
-        Long userId = (Long) session.getAttribute("userId");
+        Long userId = (Long) session.getAttribute(USER_ID_SESSION_ATTR);// my mistake
         if (userId == null) {
             throw new BLBException("You are not logged in", ResponseConstants.USER_IS_NOT_LOGGED_IN);
         }
