@@ -8,7 +8,7 @@ import org.blbcase.core.jpa.entity.User;
 
 /**
  *
- * @author rogvold
+ * @author postman
  */
 @Local
 public interface UserManagerLocal {

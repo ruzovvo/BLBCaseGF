@@ -11,12 +11,12 @@ import org.blbcase.core.jpa.entity.User;
 
 /**
  *
- * @author rogvold
+ * @author postman
  */
 @Stateless
 public class UserManager implements UserManagerLocal {
     
-    public static final String ADMIN_PASSWORD = "sabirmipt";
+    public static final String ADMIN_PASSWORD = "postmanmipt";
     @PersistenceContext(unitName = "BLBCaseCorePU")
     EntityManager em;
 

@@ -11,7 +11,7 @@ import org.blbcase.web.utils.SessionUtils;
 
 /**
  *
- * @author rogvold
+ * @author postman
  */
 @WebServlet(name = "LogoutServlet", urlPatterns = {"/logout"})
 public class LogoutServlet extends HttpServlet {

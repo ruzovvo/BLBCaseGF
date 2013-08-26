@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 
 /**
  *
- * @author Shaykhlislamov Sabir (email: sha-sabir@yandex.ru)
+ * @author Ruzov Vasilii (email: ruzov.vo@gmail.com)
  */
 public class SimpleResponseWrapper {
 

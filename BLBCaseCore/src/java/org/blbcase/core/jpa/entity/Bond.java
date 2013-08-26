@@ -8,7 +8,7 @@ import javax.persistence.Id;
 
 /**
  *
- * @author Shaykhlislamov Sabir (email: sha-sabir@yandex.ru)
+ * @author Ruzov Vasilii (email: ruzov.vo@gmail.com)
  */
 @Entity
 public class Bond implements Serializable {

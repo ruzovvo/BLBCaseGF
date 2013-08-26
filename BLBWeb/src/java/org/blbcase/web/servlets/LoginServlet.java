@@ -18,7 +18,7 @@ import org.blbcase.web.utils.SessionUtils;
 
 /**
  *
- * @author rogvold
+ * @author postman
  */
 @WebServlet(name = "LoginServlet", urlPatterns = {"/login"})
 public class LoginServlet extends HttpServlet {

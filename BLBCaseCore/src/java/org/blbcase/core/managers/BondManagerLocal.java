@@ -7,7 +7,7 @@ import org.blbcase.core.jpa.entity.Bond;
 
 /**
  *
- * @author rogvold
+ * @author postman
  */
 @Local
 public interface BondManagerLocal {

@@ -24,7 +24,7 @@ import org.blbcase.web.utils.SessionUtils;
 /**
  * REST Web Service
  *
- * @author rogvold
+ * @author postman
  */
 @Path("trader")
 @Stateless

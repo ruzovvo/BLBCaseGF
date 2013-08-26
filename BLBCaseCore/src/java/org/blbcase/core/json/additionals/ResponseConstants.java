@@ -2,7 +2,7 @@ package org.blbcase.core.json.additionals;
 
 /**
  *
- * @author Shaykhlislamov Sabir (email: sha-sabir@yandex.ru)
+ * @author Ruzov Vasilii (email: ruzov.vo@gmail.com)
  */
 public class ResponseConstants {
 

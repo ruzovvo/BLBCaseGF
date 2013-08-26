@@ -2,7 +2,7 @@ package org.blbcase.core.enums;
 
 /**
  *
- * @author rogvold
+ * @author postman
  */
 public enum UserTypeEnum {
     CLIENT, TRADER, ADMIN

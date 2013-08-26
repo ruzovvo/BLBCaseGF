@@ -12,7 +12,7 @@ import org.blbcase.core.jpa.entity.User;
 
 /**
  *
- * @author rogvold
+ * @author postman
  */
 @Stateless
 public class BondManager implements BondManagerLocal {

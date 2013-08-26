@@ -26,7 +26,7 @@ import org.blbcase.web.utils.SessionUtils;
 /**
  * REST Web Service
  *
- * @author rogvold
+ * @author postman
  */
 @Path("admin")
 @Stateless
@@ -174,6 +174,21 @@ public class AdminResource {
     @Produces("application/json")
     @Path("createBond")
     public String createBond(String data) {
+        try {
+            System.out.println(data);
+            Bond bond = (new Gson()).fromJson(data, Bond.class);
+            bond = bMan.createBond(bond);
+            JsonResponse<Bond> jr = new JsonResponse<Bond>(ResponseConstants.OK, null, bond);
+            return SimpleResponseWrapper.getJsonResponse(jr);
+        } catch (BLBException e) {
+            return BLBExceptionWrapper.wrapException(e);
+        }
+    }
+    
+    @POST
+    @Produces("application/json")
+    @Path("createFreeBond")
+    public String createFreeBond(String data) {
         try {
             System.out.println(data);
             Bond bond = (new Gson()).fromJson(data, Bond.class);
