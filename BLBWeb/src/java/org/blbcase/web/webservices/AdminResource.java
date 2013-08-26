@@ -114,15 +114,17 @@ public class AdminResource {
     @Produces("application/json")
     @Path("getFreeBonds")
     public String getFreeBonds(@Context HttpServletRequest req) {
-        try {
+       // try {
             //checking rights here
-            SessionUtils.getCurrentUserIdThrowingException(req);
+            //SessionUtils.getCurrentUserIdThrowingException(req);
+            System.out.println("Trying to find available bonds");
             List<Bond> list = bMan.getFreeBonds();
+            System.out.println("Available Bonds: " + list.size());
             JsonResponse<List<Bond>> jr = new JsonResponse<List<Bond>>(ResponseConstants.OK, null, list);
             return SimpleResponseWrapper.getJsonResponse(jr);
-        } catch (BLBException e) {
-            return BLBExceptionWrapper.wrapException(e);
-        }
+       // } catch (BLBException e) {
+       //    return BLBExceptionWrapper.wrapException(e);
+        //}
     }
 
     @GET
@@ -174,21 +176,6 @@ public class AdminResource {
     @Produces("application/json")
     @Path("createBond")
     public String createBond(String data) {
-        try {
-            System.out.println(data);
-            Bond bond = (new Gson()).fromJson(data, Bond.class);
-            bond = bMan.createBond(bond);
-            JsonResponse<Bond> jr = new JsonResponse<Bond>(ResponseConstants.OK, null, bond);
-            return SimpleResponseWrapper.getJsonResponse(jr);
-        } catch (BLBException e) {
-            return BLBExceptionWrapper.wrapException(e);
-        }
-    }
-    
-    @POST
-    @Produces("application/json")
-    @Path("createFreeBond")
-    public String createFreeBond(String data) {
         try {
             System.out.println(data);
             Bond bond = (new Gson()).fromJson(data, Bond.class);

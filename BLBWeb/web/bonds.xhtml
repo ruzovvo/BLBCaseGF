@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <title>Bonds Admin Page</title>
+        <!-- Bootstrap core CSS -->
+        <link href="css/bootstrap.css" rel="stylesheet"/>
+        <link href="css/custom.css" rel="stylesheet"/>
+
+        <!-- Custom styles for this template -->
+        <link href="css/jumbotron-narrow.css" rel="stylesheet"/>
+        <script type="text/javascript" charset="utf-8" src="js/jquery.min.js"></script>
+        <script type="text/javascript" charset="utf-8" src="js/bootstrap.js"></script>
+
+    </h:head>
+
+    <h:body>
+
+        <div class="container-narrow" style="max-width: 820px; padding: 0px 10px; border-left: 1px solid #b9b9b9; background-color: white; border-right: 1px solid #b9b9b9;">
+            <div class="header">
+                <ul class="nav nav-pills pull-right" style="margin-top: 25px;">
+                    <li><a href="admin.xhtml">Admin Page</a></li>
+                </ul>
+                <img src="img/deutsche-bank-logo.jpg" style="display: inline-block;
+                     margin-bottom: 10px; height: 60px;" />
+            </div>
+
+            <div class="jumbotron">
+                <h2>Bonds Admin Page</h2>
+            </div>
+
+            <div class="row marketing">
+                <div class="col-lg-6">
+                    <h3>Create new free bond</h3>
+                    <span class="myBlock">
+                        <span class="myLabel">CUSIP</span> <input type="text" class="form-control" id="CUSIP"/><br/>
+                        <span class="myLabel">price</span> <input type="text" class="form-control" id="price"/><br/>
+                        <span class="myLabel">parValue</span> <input type="text" class="form-control" id="parValue"/><br/>
+                        <span class="myLabel">coupon</span> <input type="text" class="form-control" id="coupon"/><br/>
+                        <span class="myLabel">currentYield</span> <input type="text" class="form-control" id="currentYield"/><br/>
+                        <span class="myLabel">yieldToMaturity</span> <input type="text" class="form-control" id="yieldToMaturity"/><br/>
+                        <span class="myLabel">rating</span> <input type="text" class="form-control" id="rating"/><br/>
+                        <span class="myLabel">quantity</span> <input type="text" class="form-control" id="quantity"/><br/>
+                        <span class="myLabel">value</span> <input type="text" class="form-control" id="value"/><br/>
+
+                        <button class="btn" style="float: right;" onclick="createBond()" >create</button>
+                    </span>
+
+                </div>
+            </div>
+
+
+            <div style="margin: 0 auto; margin-bottom: 50px; display: none; "  id="resultBlock" >
+                <h3>Bonds</h3>
+                <table class="table" id="bondsTable">
+
+                </table>
+            </div>
+
+
+            <div class="footer">
+                <p style="margin-bottom: 0px;">OLOLO, 2013</p>
+                <div style="display: block; height: 10px;"></div>
+            </div>
+
+
+        </div> <!-- /container -->
+        <div id="spinner" class="spinner" style="display:none;">
+            <img id="img-spinner" src="images/spinner.gif" alt="Loading"/>
+        </div>
+
+
+
+        <script>
+            //<![CDATA[
+            
+            function gup( name ){
+                name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");  
+                var regexS = "[\\?&]"+name+"=([^&#]*)";  
+                var regex = new RegExp( regexS );  
+                var results = regex.exec( window.location.href ); 
+                if( results == null )    return "";  
+                else    return results[1];
+            }
+            
+            function generateTableRow(b){
+                if (b == undefined){
+                    return "";
+                }
+                return ' <tr><td>' + b.CUSIP + '</td><td>' + b.price + '</td><td>' + b.parValue + '</td><td>' + b.coupon +'</td><td>' + b.currentYield +'</td><td>' + b.yieldToMaturity +'</td><td>' + b.rating +'</td><td>' + b.quantity +'</td><td>' + b.value +'</td></tr> ';
+            }
+            
+            function generateTable(array){
+                if (array == undefined){
+                    return undefined;
+                }
+                s = ' <tr><th>CUSIP</th><th>PRICE</th><th>Par Value</th><th>Coupon</th><th>Current Yield</th><th>Yield To Maturity</th><th>Rating</th><th>Quantity</th><th>Value</th></tr> ';
+                for (var i in array){
+                    s+=generateTableRow(array[i]);
+                }
+                return s;
+            }
+            
+            function loadFreeBonds(){
+                $.ajax({
+                    url: "/BLBWeb/resources/admin/getFreeBonds",
+                    success: function(data){
+                        de = data.data;
+                        if (de != undefined){
+                            $('#resultBlock').show();
+                        }
+                        $('#bondsTable').html(generateTable(data.data));
+                    }
+                });
+            }
+            
+            
+            function extractNewBond(){
+                var b = {};
+                b.CUSIP = $('#CUSIP').val();
+                b.price = $('#price').val();
+                b.parValue = $('#parValue').val();
+                b.coupon = $('#coupon').val();
+                b.currentYield = $('#currentYield').val();
+                b.yieldToMaturity = $('#yieldToMaturity').val();
+                b.rating = $('#rating').val();
+                b.quantity = $('#quantity').val();
+                b.value = $('#value').val();
+                b.clientId = null;
+                //TODO: validate
+                return b;
+            }
+            
+            function createBond(){
+                var bond = extractNewBond();
+                console.log(bond);
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify(bond),
+                    url: "/BLBWeb/resources/admin/createBond",
+                    success: function(data){
+                        de = data.data;
+                        loadFreeBonds();
+                    }
+                });
+            }
+            
+            function isNumber(n) {
+                return !isNaN(parseFloat(n)) && isFinite(n);
+            }
+            
+            $(function(){
+                loadFreeBonds();
+            });
+            //]]>
+        </script>
+
+
+    </h:body>
+</html>

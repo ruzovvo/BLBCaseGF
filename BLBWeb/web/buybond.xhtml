@@ -5,7 +5,7 @@
         <f:event listener="#{redirectBean.loggedInRedirect()}" type="preRenderView" />
 
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-        <title>Sell</title>
+        <title>Buy</title>
         <link href="css/bootstrap.css" rel="stylesheet"/>
         <link href="css/custom.css" rel="stylesheet"/>
 
@@ -30,46 +30,47 @@
             <div class="tabbable"> <!-- Only required for left/right tabs -->
                 <ul class="nav nav-tabs">
                     <li><a href="javascript: void();" onclick="window.location.href = 'client.xhtml?clientId=' + gup('clientId')"  >Portfolio</a></li>
-                    <li><a href="javascript: void();" onclick="window.location.href = 'buy.xhtml?clientId=' + gup('clientId')" >Buy</a></li>
-                    <li  class="active" ><a href="javascript: void();" ><span>Sell</span></a></li>
+                    <li class="active" ><a href="javascript: void();" onclick="window.location.href = 'buy.xhtml?clientId=' + gup('clientId')" >Buy</a></li>
+                    <li><a href="javascript: void();" ><span style="color: lightgray;">Sell</span></a></li>
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane active" id="tab1">
-                        <h3 id="summary">Order Summary</h3>
+                        <h3>Order Summary</h3>
                         <div style="display: none; color: red; margin-bottom: 10px;" id="errorBLock" >
-                            We are unable to proceed with the transaction as there is insufficient number of bonds owned in the account.
-                            Please enter the quantity to sell lower than that owned and try again.
+                            We are unable to proceed with the transaction as there is insufficient number of bonds available.
+                            Please enter the quantity to buy lower than that available and try again.
 
+                        </div>
+                        <div style="display: none; color: red; margin-bottom: 10px;" id="errorBLockNotEnoughMoney" >
+                            We are unable to proceed with the transaction as your customer's balance is too low.
+                            Please enter the quantity to buy lower and try again.
                         </div>
                         <div class="jumbotron" style="border-radius: 20px; margin-bottom: 10px; border: 2px solid darkgrey; padding: 10px; ">
                             <h:panelGrid columns="3">
                                 <h:panelGroup class="span3">CUSIP: <br/><b>#{bondBean.bond.CUSIP}</b></h:panelGroup>
                                 <h:panelGroup class="span3">Coupon: <br/><b>#{bondBean.bond.coupon}</b></h:panelGroup>
-                                <h:panelGroup class="span3">Quantity Owned: <br/><b id="ownedQuantity" >#{bondBean.bond.quantity}</b></h:panelGroup>
+                                <h:panelGroup class="span3">Quantity Available: <br/><b id="availableQuantity" >#{bondBean.bond.quantity}</b></h:panelGroup>
                                 <h:panelGroup class="span3">Price Each: <br/><b id="price">#{bondBean.bond.price}</b></h:panelGroup>
                                 <h:panelGroup class="span3">Current Yield: <br/><b>#{bondBean.bond.currentYield}</b></h:panelGroup>
                                 <h:panelGroup class="span3">
-                                    Please enter Quantity to Sell
+                                    Please enter Quantity to Buy
                                     <input type="text" id="qts" style="width: 70%;" />
                                 </h:panelGroup>
                                 <h:panelGroup class="span3">Par Value: <br/><b>#{bondBean.bond.parValue}</b></h:panelGroup>
                                 <h:panelGroup class="span3">Yield To Maturity: <br/><b>#{bondBean.bond.yieldToMaturity}</b></h:panelGroup>
-                                <h:panelGroup class="span3">Sale Price: <b id="totalPrice">?</b></h:panelGroup>
+                                <h:panelGroup class="span3">Price Total: <b id="totalPrice">?</b></h:panelGroup>
                                 <h:panelGroup class="span3">Rating <br/><b>#{bondBean.bond.rating}</b></h:panelGroup>
                             </h:panelGrid>
                         </div>
                         <div style="text-align: right;">
-                            <button class="btn btn-large" id="cancelButton" onclick="window.location.href = 'client.xhtml?clientId=' + gup('clientId')" > Cancel Order </button>
+                            <button class="btn btn-large" onclick="window.location.href = 'buy.xhtml?clientId=' + gup('clientId')" > Cancel Order </button>
                             <button class="btn btn-large" id="previewButton" onclick="previewOrder()" > Preview Order </button>
                             <button class="btn btn-large" id="confirmButton" style="display: none;" onclick="confirmOrder()" > Confirm Order </button>
-                            <button class="btn btn-large" id="returnButton" style="display: none;" onclick="window.location.href = 'client.xhtml?clientId=' + gup('clientId')" > Return to homepage </button>
                         </div>
                     </div>
 
                 </div>
             </div>
-
-
 
             <div class="footer">
                 <p style="margin-bottom: 0px;">Deutsche Bank Grad Team, 2013</p>
@@ -100,14 +101,15 @@
             
             function previewOrder(){
                 $('#errorBlock').hide();
+                
                 if (!isNumber($('#qts').val())){
                     alert("incorrect number");
                     return;
                 }
-                var owned = $('#ownedQuantity').text().trim() * 1;
+                var available = $('#availableQuantity').text().trim() * 1;
                 var qts = $('#qts').val() * 1;
                 $('#totalPrice').html(qts * $('#price').text().trim());
-                if (qts > owned){
+                if (qts > available){
                     $('#errorBLock').show();
                     return;
                 }
@@ -118,20 +120,7 @@
             }
             
             function confirmOrder(){
-                $.ajax({
-                    url: "/BLBWeb/resources/admin/sellBonds?clientId="+ gup("clientId")+"&bondId="+gup("bondId") + "&quantity="+$('#qts').val(),
-                    success: function(data){
-                        de = data.data;
-                        //if (de != undefined){
-                            $('#summary').html("Order Summary: Purchase Approved");
-                            $('#returnButton').show();
-                            $('#confirmButton').hide();
-                            $('#cancelButton').hide();
-                        //}
-                        
-                    }
-                });
-               
+                
             }
             
             $(function(){

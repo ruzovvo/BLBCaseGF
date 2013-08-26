@@ -119,16 +119,23 @@ public class BondManager implements BondManagerLocal {
 
     @Override
     public void sellBond(Long clientId, Long bondId, Integer quantity) throws BLBException {
+        System.out.println("from sellBond");
         Bond b = getBondById(bondId);
+        User client = userMan.getUserById(clientId);
         if (b.getQuantity().compareTo(quantity) < 0) {
-            throw new BLBException("client has't got so many bonds");
+            throw new BLBException("client hasn't got so many bonds");
         }
-        if (b.getQuantity().compareTo(quantity) > 0) {
+        if (client.getBalance() < b.getPrice() * quantity)
+        {
+            throw new BLBException("client doesn't have enough money");
+        }
+        if (b.getQuantity().compareTo(quantity) > 0 && client.getBalance() > b.getPrice() * quantity) {
+            System.out.println("Client " + clientId + " buys " + quantity +" of bond №" + bondId);
             b.setQuantity(b.getQuantity() - quantity);
             em.merge(b);
             userMan.replenish(b.getPrice() * quantity, clientId);
         }
-        userMan.replenish(b.getPrice() * quantity, clientId);
-        em.remove(b);
+        //userMan.replenish(b.getPrice() * quantity, clientId);
+        //em.remove(b);
     }
 }
