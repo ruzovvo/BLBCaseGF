@@ -182,7 +182,6 @@ public class BondManager implements BondManagerLocal {
         if (ytmHigh != null)
             query += " AND b.yieldToMaturity <= " + ytmHigh;
        
-        String helpQuery = "(SELECT rating FROM ratingmoodys WHERE description = '";
         if (moodysLow != null && moodysHigh != null)
         {
             String q = "SELECT rating FROM ratingmoodys WHERE description = '";

@@ -14,12 +14,15 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import org.blbcase.core.exceptions.BLBException;
 import org.blbcase.core.jpa.entity.Bond;
+import org.blbcase.core.jpa.entity.Country;
+import org.blbcase.core.jpa.entity.Holiday;
 import org.blbcase.core.jpa.entity.User;
 import org.blbcase.core.json.additionals.BLBExceptionWrapper;
 import org.blbcase.core.json.additionals.JsonResponse;
 import org.blbcase.core.json.additionals.ResponseConstants;
 import org.blbcase.core.json.additionals.SimpleResponseWrapper;
 import org.blbcase.core.managers.BondManagerLocal;
+import org.blbcase.core.managers.CountryManagerLocal;
 import org.blbcase.core.managers.UserManagerLocal;
 import org.blbcase.web.utils.SessionUtils;
 
@@ -38,6 +41,8 @@ public class AdminResource {
     UserManagerLocal userMan;
     @EJB
     BondManagerLocal bMan;
+    @EJB
+    CountryManagerLocal counMan;
 
     /**
      * Creates a new instance of AdminResource
@@ -211,6 +216,34 @@ public class AdminResource {
          */
         return "";
     }
+    
+    @GET
+    @Produces("application/json")
+    @Path("getCountries")
+    public String getCountries(String data){
+        List<Country> list = counMan.getCountries();
+        JsonResponse<List<Country>> jr = new JsonResponse<List<Country>>(ResponseConstants.OK, null, list);
+        return SimpleResponseWrapper.getJsonResponse(jr);
+    }
+    
+    @GET
+    @Produces("application/json")
+    @Path("getCountryInfo")
+    public String getCountryInfo(@Context HttpServletRequest req, @QueryParam("countryId") Long countryId){
+        Country coun = counMan.getCountryById(countryId);
+        JsonResponse<Country> jr = new JsonResponse<Country>(ResponseConstants.OK, null, coun);
+        return SimpleResponseWrapper.getJsonResponse(jr);
+    }
+    
+    @GET
+    @Produces("application/json")
+    @Path("getHolidays")
+    public String getHolidays(@Context HttpServletRequest req, @QueryParam("countryId") Long countryId){
+        List<Holiday> list = counMan.getHolidaysForCountry(countryId);
+        JsonResponse<List<Holiday>> jr = new JsonResponse<List<Holiday>>(ResponseConstants.OK, null, list);
+        return SimpleResponseWrapper.getJsonResponse(jr);
+    }
+    
 
     @POST
     @Produces("application/json")

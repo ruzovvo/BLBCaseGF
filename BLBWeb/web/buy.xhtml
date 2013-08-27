@@ -19,7 +19,7 @@
 
     <h:body>
 
-        <div class="container-narrow" style="max-width: 820px; padding: 0px 10px; border-left: 1px solid #b9b9b9; background-color: white; border-right: 1px solid #b9b9b9;">
+        <div class="container-narrow" style="max-width: 900px; padding: 0px 10px; border-left: 1px solid #b9b9b9; background-color: white; border-right: 1px solid #b9b9b9;">
             <div class="header">
                 <ul class="nav nav-pills pull-right" style="margin-top: 25px;">
                     <li class="welcome"> <a href="#"  > Welcome Trader <b>#{traderBean.trader.login} </b> </a> </li>
@@ -32,6 +32,34 @@
                     <li><a href="javascript: void();" onclick="window.location.href = 'client.xhtml?clientId=' + gup('clientId')"  >Portfolio</a></li>
                     <li class="active" ><a href="javascript: void();" >Buy</a></li>
                     <li><a href="javascript: void();" ><span style="color: lightgray;">Sell</span></a></li>
+                    
+                    <li class="pull-right">
+                          <!--Dropdown button 1-->
+                          <div class="btn-group"> 
+                            <div class="btn-group"> 
+                              <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="width: 150px;" id="countryName">
+                                Choose country
+                                <span class="caret pull-right"></span>
+                              </a>
+                              <ul class="dropdown-menu" id="countryList">
+                              </ul>
+                            </div>
+                            <!--Dropdown button 2-->
+                            <div class="btn-group"> 
+                              <a class="btn dropdown-toggle text-left" data-toggle="dropdown" href="#" style="width: 150px;">
+                                Bank holidays:
+                                <span class="caret pull-right"></span>
+                              </a>
+                              <ul class="dropdown-menu" id="holidayList">
+                                <li>Year 2013</li>
+                                <li class="divider"></li>
+                                <li><a href="#">1 Jan Wednesday New Years Day</a></li>
+                                <li><a href="#">...</a></li>
+                              </ul>
+                            </div>
+                            <button class="btn" disabled="true" id="jurDelay"><b>JD: 3</b></button>
+                          </div>
+                    </li>
                 </ul>
                 
                 <button style="search" class="btn" data-toggle="collapse" data-target="#collapsableSearch">Filter bonds <span class="caret"></span></button>
@@ -227,9 +255,60 @@
                 });
             }
             
+            function setLocation(countryId){
+                $.ajax({
+                    url: "/BLBWeb/resources/admin/getCountryInfo?countryId=" + countryId,
+                    success: function(data){
+                        de = data.data;
+                        if (de != undefined){
+                            $('#resultBlock').show();
+                            $('#countryName').html(de.countryName + '<span class="caret pull-right"></span>');
+                            $('#jurDelay').html('<b>JD: ' + de.jurDelay + '</b>');
+                            $.ajax({
+                                url: "/BLBWeb/resources/admin/getHolidays?countryId=" + countryId,
+                                success: function(data1){
+                                    de1 = data1.data;
+                                    if (de1 != undefined){
+                                        var list = "";
+                                        console.log(de1);
+                                        for (var i in de1){
+                                            console.log(i.holidayName);
+                                            list += '<li><a href="#">' + i.holidayName + ' ' + i.holidayDate + '</a></li>'
+                                        }
+                                        $('#holidayList').html(list);
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
+                
+            }
+            
+            function loadLocations()
+            {
+                $.ajax({
+                    url: "/BLBWeb/resources/admin/getCountries",
+                    success: function(data){
+                        de = data.data;
+                        if (de != undefined){
+                            $('#resultBlock').show();
+                            console.log(de);
+                            var list = "";
+                            for (var i in de){
+                                console.log("country " + i);
+                                list += '<li><a href="#">' + i.countryName + '</a></li>';
+                            }
+                            $('#countryList').html(list);
+                        }
+                    }
+                });
+            }
                                   
             $(function(){
                 loadFreeBonds();
+                loadLocations();
+                setLocation(1);
                 //loadRatingRanges();
                //window.location.href = window.location.href;
             });
