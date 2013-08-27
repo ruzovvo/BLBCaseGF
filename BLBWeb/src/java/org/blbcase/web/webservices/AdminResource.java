@@ -126,6 +126,32 @@ public class AdminResource {
         //    return BLBExceptionWrapper.wrapException(e);
         //}
     }
+    
+    @GET
+    @Produces("application/json")
+    @Path("findBonds")
+    public String findBonds(@Context HttpServletRequest req,
+        @QueryParam("priceLow") Double priceLow, @QueryParam("priceHigh") Double priceHigh,
+        @QueryParam("parLow") Double parLow, @QueryParam("parHigh") Double parHigh,
+        @QueryParam("couponLow") Double couponLow, @QueryParam("couponHigh") Double couponHigh,
+        @QueryParam("cyLow") Double cyLow, @QueryParam("cyHigh") Double cyHigh,
+        @QueryParam("ytmLow") Double ytmLow, @QueryParam("ytmHigh") Double ytmHigh,
+        @QueryParam("moodysLow") String moodysLow, @QueryParam("moodysHigh") String moodysHigh,
+        @QueryParam("snpLow") String snpLow, @QueryParam("snpHigh") String snpHigh
+        )
+    {
+        // try {
+        //checking rights here
+        //SessionUtils.getCurrentUserIdThrowingException(req);
+        System.out.println("Trying to find available bonds with parameters");
+        List<Bond> list = bMan.findBondsWithParameters(priceLow, priceHigh, parLow, parHigh, couponLow, couponHigh, cyLow, cyHigh, ytmLow, ytmHigh, moodysLow, moodysHigh, snpLow, snpHigh);
+        System.out.println("Available Bonds: " + list.size());
+        JsonResponse<List<Bond>> jr = new JsonResponse<List<Bond>>(ResponseConstants.OK, null, list);
+        return SimpleResponseWrapper.getJsonResponse(jr);
+        // } catch (BLBException e) {
+        //    return BLBExceptionWrapper.wrapException(e);
+        //}
+    }
 
     @GET
     @Produces("application/json")
@@ -175,6 +201,16 @@ public class AdminResource {
             return BLBExceptionWrapper.wrapException(e);
         }
     }
+    
+    @GET
+    @Produces("application/json")
+    @Path("getRatingRangeMoodys")
+    public String getRatingRangeMoodys(String data){
+        /**
+         * TODO finish getting rating from database
+         */
+        return "";
+    }
 
     @POST
     @Produces("application/json")
@@ -190,6 +226,8 @@ public class AdminResource {
             return BLBExceptionWrapper.wrapException(e);
         }
     }
+    
+    
 
     /**
      * Creates a new instance of AdminResource

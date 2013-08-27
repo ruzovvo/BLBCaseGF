@@ -32,4 +32,9 @@ public interface BondManagerLocal {
     
     public void sellBond(Long clientId, Long bondId, Integer quantity) throws BLBException;
     
+    public List<Bond> findBondsWithParameters(Double priceLow, Double priceHigh,
+                Double parLow, Double parHigh, Double couponLow, Double couponHigh,
+                Double cyLow, Double cyHigh, Double ytmLow, Double ytmHigh,
+                String moodysLow, String moodysHigh, String snpLow, String snpHigh);
+    
 }

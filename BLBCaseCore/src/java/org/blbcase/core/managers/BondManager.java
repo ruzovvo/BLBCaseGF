@@ -57,7 +57,7 @@ public class BondManager implements BondManagerLocal {
         if (b == null) {
             return null;
         }
-        return new Bond(b.getCUSIP(), b.getPrice(), b.getParValue(), b.getCoupon(), b.getCurrentYield(), b.getYieldToMaturity(), b.getRating(), b.getQuantity(), b.getClientId(), b.getBoughtOn());
+        return new Bond(b.getCUSIP(), b.getPrice(), b.getParValue(), b.getCoupon(), b.getCurrentYield(), b.getYieldToMaturity(), b.getQuantity(), b.getClientId(), b.getBoughtOn(), b.getRatingMoodys(), b.getRatingSnp(), b.getBondId(), b.getIssuer());
 
     }
 
@@ -93,11 +93,11 @@ public class BondManager implements BondManagerLocal {
         }
         return em.find(Bond.class, bId);
     }
-
+    
     @Override
     public void buyFreeBond(Long clientId, Long freeBondId, Integer quantity) throws BLBException {
         Bond b = getBondById(freeBondId);
-        System.out.println("Client " + clientId + " buys " + quantity +" bonds №" + freeBondId);
+        System.out.println("Client " + clientId + " buys " + quantity +" bonds №" + b.getBondId());
         if (b.getClientId() != null) {
             throw new BLBException("access to this bond denied");
         }
@@ -146,7 +146,76 @@ public class BondManager implements BondManagerLocal {
                 em.remove(b);
             }
             userMan.replenish(b.getPrice() * quantity, clientId);
+            //TODO add logging of all transactions
         }
+    }
+    
+    /**
+     * left parameter null if you dont want to make a search by this parameter
+     * @return 
+     */
+    @Override
+    public List<Bond> findBondsWithParameters(Double priceLow, Double priceHigh,
+                Double parLow, Double parHigh, Double couponLow, Double couponHigh,
+                Double cyLow, Double cyHigh, Double ytmLow, Double ytmHigh,
+                String moodysLow, String moodysHigh, String snpLow, String snpHigh)
+    {
+        String query = "select b from Bond b where 1=1 ";
+        if (priceLow != null)
+            query += " AND b.price >= " + priceLow;
+        if (priceHigh != null)
+            query += " AND b.price <= " + priceHigh;
+        if (parLow != null)
+            query += " AND b.parValue >= " +parLow;
+        if (parHigh != null)
+            query += " AND b.parValue <= " +parHigh;
+        if (couponLow != null)
+            query += " AND b.coupon >= " + couponLow;
+        if (couponHigh != null)
+            query += " AND b.coupon <= " + couponHigh;
+        if (cyLow != null)
+            query += " AND b.currentYield >= " + cyLow;
+        if (cyHigh != null)
+            query += " AND b.currentYield <= " + cyHigh;
+        if (ytmLow != null)
+            query += " AND b.yieldToMaturity >= " + ytmLow;
+        if (ytmHigh != null)
+            query += " AND b.yieldToMaturity <= " + ytmHigh;
+       
+        String helpQuery = "(SELECT rating FROM ratingmoodys WHERE description = '";
+        if (moodysLow != null && moodysHigh != null)
+        {
+            String q = "SELECT rating FROM ratingmoodys WHERE description = '";
+            Query var = em.createNativeQuery(q + moodysLow + "'");
+            int moodysRatingMoodysLow = (Integer)var.getSingleResult();
+            
+            query += " AND b.ratingMoodys >= " + moodysRatingMoodysLow;
+            
+            var = em.createNativeQuery(q + moodysHigh + "'");
+            int moodysRatingMoodysHigh = (Integer)var.getSingleResult();
+            
+            query += " AND b.ratingMoodys <= " + moodysRatingMoodysHigh;
+        }
+        if (snpLow != null && snpHigh != null)
+        {
+            String q = "SELECT rating FROM ratingsnp WHERE description = '";
+            Query var = em.createNativeQuery(q + snpLow + "'");
+            int snpRatingSnpLow = (Integer)var.getSingleResult();
+            
+            query += " AND b.ratingSnp >= " + snpRatingSnpLow;
+            
+            var = em.createNativeQuery(q + snpHigh + "'");
+            int snpRatingSnpHigh = (Integer)var.getSingleResult();
+            
+            query += " AND b.ratingSnp <= " + snpRatingSnpHigh;
+        }
+        
+        System.out.println("---===!!!!Looking for bond with parameters: " + query);
+        query += " AND b.clientId is null order by b.id desc";
+        List<Bond> list = null;
+        list = em.createQuery(query).getResultList();
+        System.out.println("---===Found " + list.size() + " bonds by parameters===---");
+        return list;
     }
     
     public boolean mergeBonds(Bond bond)

@@ -25,26 +25,32 @@ public class Bond implements Serializable {
     private Double coupon;
     private Double currentYield;
     private Double yieldToMaturity;
-    private Integer rating;
     private Integer quantity;
     private Long clientId;
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date boughtOn;
+    private Integer ratingMoodys;
+    private Integer ratingSnp;
+    private int bondId;
+    private String issuer;
 
     public Bond() {
     }
 
-    public Bond(String CUSIP, Double price, Double parValue, Double coupon, Double currentYield, Double yieldToMaturity, Integer rating, Integer quantity, Long clientId, Date boughtOn) {
+    public Bond(String CUSIP, Double price, Double parValue, Double coupon, Double currentYield, Double yieldToMaturity, Integer quantity, Long clientId, Date boughtOn, Integer ratingMoodys, Integer ratingSnp, Integer bondId, String issuer) {
         this.CUSIP = CUSIP;
         this.price = price;
         this.parValue = parValue;
         this.coupon = coupon;
         this.currentYield = currentYield;
         this.yieldToMaturity = yieldToMaturity;
-        this.rating = rating;
+        this.ratingMoodys = ratingMoodys;
+        this.ratingSnp = ratingSnp;
         this.quantity = quantity;
         this.clientId = clientId;
         this.boughtOn = boughtOn;
+        this.bondId = bondId;
+        this.issuer = issuer;
     }
 
     public Long getId() {
@@ -53,6 +59,14 @@ public class Bond implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getIssuer() {
+        return issuer;
+    }
+
+    public void setIssuer(String issuer) {
+        this.issuer = issuer;
     }
 
     public Long getClientId() {
@@ -111,14 +125,6 @@ public class Bond implements Serializable {
         this.quantity = quantity;
     }
 
-    public Integer getRating() {
-        return rating;
-    }
-
-    public void setRating(Integer rating) {
-        this.rating = rating;
-    }
-
     public Double getYieldToMaturity() {
         return yieldToMaturity;
     }
@@ -134,8 +140,30 @@ public class Bond implements Serializable {
     public void setBoughtOn(Date boughtOn) {
         this.boughtOn = boughtOn;
     }
-    
-    
+
+    public Integer getRatingMoodys() {
+        return ratingMoodys;
+    }
+
+    public void setRatingMoodys(Integer ratingMoodys) {
+        this.ratingMoodys = ratingMoodys;
+    }
+
+    public Integer getRatingSnp() {
+        return ratingSnp;
+    }
+
+    public void setRatingSnp(Integer ratingSnp) {
+        this.ratingSnp = ratingSnp;
+    }
+
+    public int getBondId() {
+        return bondId;
+    }
+
+    public void setBondId(int bondId) {
+        this.bondId = bondId;
+    }
 
     @Override
     public int hashCode() {
@@ -159,10 +187,11 @@ public class Bond implements Serializable {
     
     public boolean canBeMerged(Bond bond)
     {
-        return (this.CUSIP.equals(bond.getCUSIP()) && Double.compare(coupon, bond.getCoupon()) == 0
-                && this.currentYield == bond.getCurrentYield() && this.parValue == bond.getParValue() 
-                && this.price == bond.getPrice() && this.rating == bond.getRating()
-                && this.yieldToMaturity == bond.getYieldToMaturity());
+        return (this.bondId == bond.getBondId());
+        //return (this.CUSIP.equals(bond.getCUSIP()) && Double.compare(coupon, bond.getCoupon()) == 0
+        //        && this.currentYield == bond.getCurrentYield() && this.parValue == bond.getParValue() 
+        //        && this.price == bond.getPrice()
+        //        && this.yieldToMaturity == bond.getYieldToMaturity());
     }
 
     @Override
