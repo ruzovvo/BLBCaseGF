@@ -69,7 +69,7 @@
                             Please enter the quantity to buy lower and try again.
                         </div>
                         <div class="alert alert-success" style="display: none; margin-bottom: 10px;" id="successBlock" >
-                            PURCHASE APPROVED!
+                            PURCHASE APPROVED! Your bond will be available after jurisdiction delay!
                         </div>
                         <div class="jumbotron" style="border-radius: 20px; margin-bottom: 10px; border: 2px solid darkgrey; padding: 10px; ">
                             <h:panelGrid columns="3">
@@ -159,7 +159,7 @@
             
             function confirmOrder(){
                 $.ajax({
-                    url: "/BLBWeb/resources/admin/buyBonds?clientId="+ gup("clientId")+"&bondId="+gup("bondId") + "&quantity="+$('#qts').val(),
+                    url: "/BLBWeb/resources/admin/buyBonds?clientId="+ gup("clientId")+"&bondId="+gup("bondId") + "&quantity="+$('#qts').val() + "&traderId="+#{traderBean.trader.id} + "&jurDelay=3",
                     success: function(data){
                         de = data.data;
                         //console.log(data);

@@ -161,11 +161,11 @@ public class AdminResource {
     @GET
     @Produces("application/json")
     @Path("buyBonds")
-    public String buyBonds(@Context HttpServletRequest req, @QueryParam("clientId") Long clientId, @QueryParam("bondId") Long bondId, @QueryParam("quantity") Integer quantity) {
+    public String buyBonds(@Context HttpServletRequest req, @QueryParam("clientId") Long clientId, @QueryParam("bondId") Long bondId, @QueryParam("quantity") Integer quantity, @QueryParam("traderId") Long traderId, @QueryParam("jurDelay") Integer jurDelay) {
         try {
             //checking rights here
             SessionUtils.getCurrentUserIdThrowingException(req);
-            bMan.buyFreeBond(clientId, bondId, quantity);
+            bMan.buyFreeBond(clientId, bondId, quantity, traderId, jurDelay);
             JsonResponse<String> jr = new JsonResponse<String>(ResponseConstants.OK, null, ResponseConstants.YES);
 
             return SimpleResponseWrapper.getJsonResponse(jr);
@@ -177,13 +177,13 @@ public class AdminResource {
     @GET
     @Produces("application/json")
     @Path("sellBonds")
-    public String sellBonds(@Context HttpServletRequest req, @QueryParam("clientId") Long clientId, @QueryParam("bondId") Long bondId, @QueryParam("quantity") Integer quantity) {
+    public String sellBonds(@Context HttpServletRequest req, @QueryParam("clientId") Long clientId, @QueryParam("bondId") Long bondId, @QueryParam("quantity") Integer quantity, @QueryParam("traderId") Long traderId) {
         try {
             //checking rights here
             System.out.println("selling bonds");
             SessionUtils.getCurrentUserIdThrowingException(req);
             System.out.println("logged in");
-            bMan.sellBond(clientId, bondId, quantity);
+            bMan.sellBond(clientId, bondId, quantity, traderId);
             System.out.println("bonds sold");
             JsonResponse<String> jr = new JsonResponse<String>(ResponseConstants.OK, null, ResponseConstants.YES);
             return SimpleResponseWrapper.getJsonResponse(jr);

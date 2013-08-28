@@ -57,7 +57,7 @@ public class BondManager implements BondManagerLocal {
         if (b == null) {
             return null;
         }
-        return new Bond(b.getCUSIP(), b.getPrice(), b.getParValue(), b.getCoupon(), b.getCurrentYield(), b.getYieldToMaturity(), b.getQuantity(), b.getClientId(), b.getBoughtOn(), b.getRatingMoodys(), b.getRatingSnp(), b.getBondId(), b.getIssuer());
+        return new Bond(b.getCUSIP(), b.getPrice(), b.getParValue(), b.getCoupon(), b.getCurrentYield(), b.getYieldToMaturity(), b.getQuantity(), b.getClientId(), b.getBoughtOn(), b.getRatingMoodys(), b.getRatingSnp(), b.getBondId(), b.getIssuer(), b.getRatingMoodysString(), b.getRatingSnpString());
 
     }
 
@@ -95,7 +95,7 @@ public class BondManager implements BondManagerLocal {
     }
     
     @Override
-    public void buyFreeBond(Long clientId, Long freeBondId, Integer quantity) throws BLBException {
+    public void buyFreeBond(Long clientId, Long freeBondId, Integer quantity, Long traderId, Integer jurDelay) throws BLBException {
         Bond b = getBondById(freeBondId);
         System.out.println("Client " + clientId + " buys " + quantity +" bonds №" + b.getBondId());
         if (b.getClientId() != null) {
@@ -119,11 +119,37 @@ public class BondManager implements BondManagerLocal {
         b.setQuantity(b.getQuantity() - quantity);
         b = em.merge(b);
         userMan.withdraw(b.getPrice() * quantity, clientId);
+        insertTransaction(clientId, clientBond.getBondId(), quantity, traderId, "B", clientBond.getPrice(), clientBond.getBoughtOn(), jurDelay);
+            
         //TODO: merge bonds with equal CUSIPs owned by one client
+    }
+    
+    public void insertTransaction(Long clientId, Long bondId, Integer quantity, Long traderId, String buysell, Double price, Date purchasedOn, Integer jurDelay){
+        /*
+         * INSERT INTO transactions(traderid, clientid, buyorsell, bondid, amount, price, purchasedate, 
+            deliverydate, id)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+         */
+        String insertQuery = "insert into transactions (traderid, clientid, buyorsell, bondid, amount, price, purchasedate, deliverydate) values (";
+        insertQuery += "'" + traderId + "',";
+        insertQuery += "'" + clientId + "',";
+        insertQuery += "'" + buysell + "',";
+        insertQuery += "'" + bondId + "',";
+        insertQuery += "'" + quantity + "',";
+        insertQuery += "'" + price + "',";
+        insertQuery += "'" + purchasedOn + "',";
+        Date date = purchasedOn;
+        date.setTime(purchasedOn.getTime() + 259200000);
+        if (buysell.equals("S"))
+            insertQuery += null;
+        else {insertQuery += "'" + date + "'"; }
+        insertQuery += ")";
+        System.out.println(insertQuery);
+        em.createNativeQuery(insertQuery).executeUpdate();
     }
 
     @Override
-    public void sellBond(Long clientId, Long bondId, Integer quantity) throws BLBException {
+    public void sellBond(Long clientId, Long bondId, Integer quantity, Long traderId) throws BLBException {
         System.out.println("from sellBond");
         Bond b = getBondById(bondId);
         User client = userMan.getUserById(clientId);
@@ -146,6 +172,7 @@ public class BondManager implements BondManagerLocal {
                 em.remove(b);
             }
             userMan.replenish(b.getPrice() * quantity, clientId);
+            insertTransaction(clientId, freeBond.getBondId(), quantity, traderId, "S", b.getPrice(), new Date(), 0);
             //TODO add logging of all transactions
         }
     }

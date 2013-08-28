@@ -31,7 +31,7 @@ public class Bond implements Serializable {
     private Date boughtOn;
     private Integer ratingMoodys;
     private Integer ratingSnp;
-    private int bondId;
+    private Long bondId;
     private String issuer;
 
     private String ratingMoodysString;
@@ -39,7 +39,7 @@ public class Bond implements Serializable {
     public Bond() {
     }
 
-    public Bond(String CUSIP, Double price, Double parValue, Double coupon, Double currentYield, Double yieldToMaturity, Integer quantity, Long clientId, Date boughtOn, Integer ratingMoodys, Integer ratingSnp, Integer bondId, String issuer) {
+    public Bond(String CUSIP, Double price, Double parValue, Double coupon, Double currentYield, Double yieldToMaturity, Integer quantity, Long clientId, Date boughtOn, Integer ratingMoodys, Integer ratingSnp, Long bondId, String issuer, String rat1, String rat2) {
         this.CUSIP = CUSIP;
         this.price = price;
         this.parValue = parValue;
@@ -53,6 +53,8 @@ public class Bond implements Serializable {
         this.boughtOn = boughtOn;
         this.bondId = bondId;
         this.issuer = issuer;
+        this.ratingMoodysString = rat1;
+        this.ratingSnpString = rat2;
     }
 
     public Long getId() {
@@ -159,11 +161,11 @@ public class Bond implements Serializable {
         this.ratingSnp = ratingSnp;
     }
 
-    public int getBondId() {
+    public Long getBondId() {
         return bondId;
     }
 
-    public void setBondId(int bondId) {
+    public void setBondId(Long bondId) {
         this.bondId = bondId;
     }
 

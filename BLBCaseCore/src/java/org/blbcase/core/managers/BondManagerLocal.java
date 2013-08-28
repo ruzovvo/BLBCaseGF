@@ -28,9 +28,9 @@ public interface BondManagerLocal {
     
     public Bond getBondById(Long bId);
 
-    public void buyFreeBond(Long clientId, Long freeBondId, Integer quantity) throws BLBException;
+    public void buyFreeBond(Long clientId, Long freeBondId, Integer quantity, Long traderId, Integer jurDelay) throws BLBException;
     
-    public void sellBond(Long clientId, Long bondId, Integer quantity) throws BLBException;
+    public void sellBond(Long clientId, Long bondId, Integer quantity, Long traderId) throws BLBException;
     
     public List<Bond> findBondsWithParameters(Double priceLow, Double priceHigh,
                 Double parLow, Double parHigh, Double couponLow, Double couponHigh,
