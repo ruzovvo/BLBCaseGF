@@ -31,6 +31,11 @@ public class Holiday implements Serializable {
     private Long countryId;
     private String holidayName;
 
+    public Holiday() {
+    }
+    
+    
+
     public Date getHolidayDate() {
         return holidayDate;
     }

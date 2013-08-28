@@ -31,14 +31,13 @@
                 <ul class="nav nav-tabs">
                     <li><a href="javascript: void();" onclick="window.location.href = 'client.xhtml?clientId=' + gup('clientId')"  >Portfolio</a></li>
                     <li class="active" ><a href="javascript: void();" >Buy</a></li>
-                    <li><a href="javascript: void();" ><span style="color: lightgray;">Sell</span></a></li>
                     
                     <li class="pull-right">
                           <!--Dropdown button 1-->
                           <div class="btn-group"> 
                             <div class="btn-group"> 
                               <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="width: 150px;" id="countryName">
-                                Choose country
+                                United Kingdom
                                 <span class="caret pull-right"></span>
                               </a>
                               <ul class="dropdown-menu" id="countryList">
@@ -51,8 +50,6 @@
                                 <span class="caret pull-right"></span>
                               </a>
                               <ul class="dropdown-menu" id="holidayList">
-                                <li>Year 2013</li>
-                                <li class="divider"></li>
                                 <li><a href="#">1 Jan Wednesday New Years Day</a></li>
                                 <li><a href="#">...</a></li>
                               </ul>
@@ -131,7 +128,6 @@
                         <table class="table" id="bondsTable">
 
                         </table>
-                        123
                     </div>
 
                 </div>
@@ -167,14 +163,17 @@
                     return "";
                 }
                 var value = b.price * b.quantity;
-                return ' <tr> <td><button class="buyButton" data-id="' + b.id +'" > BUY</button></td><td>' + b.issuer + '</td><td>' + b.CUSIP + '</td><td>' + b.price + '</td><td>' + b.parValue + '</td><td>' + b.coupon +'</td><td>' + b.currentYield +'</td><td>' + b.yieldToMaturity +'</td><td>' + b.quantity +'</td><td>' + b.ratingSnp +'</td><td>' + b.ratingMoodys +'</td><td>' + value.toFixed(2) +'</td></tr> ';
+                var cusip = "N/A";
+                if (b.CUSIP != undefined)
+                    cusip = b.CUSIP;
+                return ' <tr> <td><button class="buyButton" data-id="' + b.id +'" > BUY</button></td><td>' + b.issuer + '</td><td>' + cusip + '</td><td>' + b.price + '</td><td>' + b.parValue + '</td><td>' + b.coupon +'</td><td>' + b.currentYield +'</td><td>' + b.yieldToMaturity +'</td><td>' + b.quantity +'</td><td>' + b.ratingMoodysString +'</td><td>' + b.ratingSnpString +'</td><td style="text-align:right;">' + value.toFixed(2) +'</td></tr> ';
             }
             
             function generateTable(array){
                 if (array == undefined){
                     return undefined;
                 }
-                s = ' <tr><th>Select To Buy</th><th>Issuer</th><th>CUSIP</th><th>PRICE</th><th>Par Value</th><th>Coupon</th><th>Current Yield</th><th>Yield To Maturity</th><th>Quantity</th><th>Moodys</th><th>SnP</th><th>Value</th></tr> ';
+                s = ' <tr><th>Select To Buy</th><th>Issuer</th><th>CUSIP</th><th>PRICE</th><th>Par Value</th><th>Coupon %</th><th>Current Yield %</th><th>Yield To Maturity %</th><th>Quantity</th><th>Moodys</th><th>SnP</th><th>Value</th></tr> ';
                 for (var i in array){
                     s+=generateTableRow(array[i]);
                 }
@@ -227,13 +226,10 @@
                 if ($('#snpcb').is(':checked'))
                     query += "&snpLow="+$('#snpLow').val()+"&snpHigh="+$('#snpHigh').val();
                 
-                console.log(query);
                 $.ajax({
                     url: query,   
                     success: function(data){
                         de = data.data;
-                        console.log(data);
-                        console.log(de);
                         if (de != undefined){
                             $('#resultBlock').show();
                             $('#bondsTable').html(generateTable(data.data));
@@ -270,10 +266,9 @@
                                     de1 = data1.data;
                                     if (de1 != undefined){
                                         var list = "";
-                                        console.log(de1);
                                         for (var i in de1){
-                                            console.log(i.holidayName);
-                                            list += '<li><a href="#">' + i.holidayName + ' ' + i.holidayDate + '</a></li>'
+                                            var date = new Date(de1[i].holidayDate);
+                                            list += '<li><a href="#">' + de1[i].holidayName + ' ' + formatDate(date) + '</a></li>'
                                         }
                                         $('#holidayList').html(list);
                                     }
@@ -283,6 +278,41 @@
                     }
                 });
                 
+            }
+            
+            function formatDate(d)
+            {
+                var d_names = new Array("Sun", "Mon", "Tue",
+                              "Wed", "Thu", "Fri", "Sat");
+
+                var m_names = new Array("Jan", "Feb", "Mar", 
+                "Apr", "May", "Jun", "Jul", "Aug", "Sep", 
+                "Oct", "Nov", "Dec");
+
+                var curr_day = d.getDay();
+                var curr_date = d.getDate();
+                var sup = "";
+                if (curr_date == 1 || curr_date == 21 || curr_date ==31)
+                   {
+                   sup = "st";
+                   }
+                else if (curr_date == 2 || curr_date == 22)
+                   {
+                   sup = "nd";
+                   }
+                else if (curr_date == 3 || curr_date == 23)
+                   {
+                   sup = "rd";
+                   }
+                else
+                   {
+                   sup = "th";
+                   }
+                var curr_month = d.getMonth();
+                var curr_year = d.getFullYear();
+
+                return (d_names[curr_day] + " " + curr_date + "<SUP>"
+                + sup + "</SUP> " + m_names[curr_month] + " " + curr_year);
             }
             
             function loadLocations()
@@ -296,8 +326,8 @@
                             console.log(de);
                             var list = "";
                             for (var i in de){
-                                console.log("country " + i);
-                                list += '<li><a href="#">' + i.countryName + '</a></li>';
+                                //console.log("");
+                                list += '<li><a href="#" onclick="setLocation(' + de[i].id +')">' + de[i].countryName + '</a></li>';
                             }
                             $('#countryList').html(list);
                         }
@@ -309,13 +339,10 @@
                 loadFreeBonds();
                 loadLocations();
                 setLocation(1);
-                //loadRatingRanges();
-               //window.location.href = window.location.href;
             });
             
             //]]>
         </script>
-
-
+        
     </h:body>
 </html>
