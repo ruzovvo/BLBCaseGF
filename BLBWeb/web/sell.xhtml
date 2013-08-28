@@ -115,7 +115,7 @@
                 var quantity = $('#quantity').text().trim() * 1;
                 var qts = $('#qts').val() * 1;
                 console.log(qts);
-                $('#totalPrice').html((qts * $('#price').text().trim()).toFixed(2));
+                $('#totalPrice').html((qts * $('#price').text().trim()).formatMoney(2));
                 if (qts > quantity){
                     $('#errorBlock').show();
                     return -1;
@@ -135,7 +135,7 @@
             
             function confirmOrder(){
                 $.ajax({
-                    url: "/BLBWeb/resources/admin/sellBonds?clientId="+ gup("clientId")+"&bondId="+gup("bondId") + "&quantity="+$('#qts').val(),
+                    url: "/BLBWeb/resources/admin/sellBonds?clientId="+ gup("clientId")+"&bondId="+gup("bondId") + "&quantity="+$('#qts').val() + "&traderId="+#{traderBean.trader.id},
                     success: function(data){
                         de = data.data;
                         //console.log(data);
@@ -154,7 +154,7 @@
             }
             
             $(function(){
-                 $("#clientBalance").html("$" + (#{clientBean.client.balance}).toFixed(2));
+                 $("#clientBalance").html((#{clientBean.client.balance}).formatMoney(2));
             });
             
             //]]>

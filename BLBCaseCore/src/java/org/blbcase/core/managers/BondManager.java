@@ -130,9 +130,15 @@ public class BondManager implements BondManagerLocal {
         clientBond.setClientId(clientId);
         clientBond.setQuantity(quantity);
         clientBond.setBoughtOn(new Date());
+        
+        Date date = new Date();
+        date.setTime(clientBond.getBoughtOn().getTime() + 259200000);
+        clientBond.setDeliveryOn(date);
         em.merge(clientBond);
+        
         b.setQuantity(b.getQuantity() - quantity);
-        b = em.merge(b);
+        em.merge(b);
+        System.out.println(clientBond.getBoughtOn());
         userMan.withdraw(b.getPrice() * quantity, clientId);
         insertTransaction(clientId, clientBond.getBondId(), quantity, traderId, "B", clientBond.getPrice(), clientBond.getBoughtOn(), jurDelay);
             
@@ -153,11 +159,11 @@ public class BondManager implements BondManagerLocal {
         insertQuery += "'" + quantity + "',";
         insertQuery += "'" + price + "',";
         insertQuery += "'" + purchasedOn + "',";
-        Date date = purchasedOn;
+        Date date = (Date)purchasedOn.clone();
         date.setTime(purchasedOn.getTime() + 259200000);
-        if (buysell.equals("S"))
-            insertQuery += null;
-        else {insertQuery += "'" + date + "'"; }
+        if (buysell.equals("B"))
+            {insertQuery += "'" + date + "'"; }
+        else {insertQuery += "null";}
         insertQuery += ")";
         System.out.println(insertQuery);
         em.createNativeQuery(insertQuery).executeUpdate();
@@ -177,7 +183,6 @@ public class BondManager implements BondManagerLocal {
             b.setQuantity(b.getQuantity() - quantity);
             freeBond.setQuantity(quantity);
             freeBond.setClientId(null);
-            freeBond.setBoughtOn(null);
             boolean merged = mergeBonds(freeBond);
             em.merge(b);
             if (!merged)
@@ -187,6 +192,7 @@ public class BondManager implements BondManagerLocal {
                 em.remove(b);
             }
             userMan.replenish(b.getPrice() * quantity, clientId);
+            System.out.println(clientId + " "+ freeBond.getBondId() + " "+ quantity + " "+ traderId + " "+"S" + " "+ b.getPrice());
             insertTransaction(clientId, freeBond.getBondId(), quantity, traderId, "S", b.getPrice(), new Date(), 0);
             //TODO add logging of all transactions
         }

@@ -219,6 +219,7 @@ public class Bond implements Serializable {
     
     public boolean canBeMerged(Bond bond)
     {
+        //System.out.println(this.bondId + " " + bond.getBondId() + " " + this.boughtOn + " " + bond.getBoughtOn());
         return (this.bondId == bond.getBondId());
         //return (this.CUSIP.equals(bond.getCUSIP()) && Double.compare(coupon, bond.getCoupon()) == 0
         //        && this.currentYield == bond.getCurrentYield() && this.parValue == bond.getParValue() 

@@ -19,7 +19,7 @@
 
     <h:body>
 
-        <div class="container-narrow" style="max-width: 900px; padding: 0px 10px; border-left: 1px solid #b9b9b9; background-color: white; border-right: 1px solid #b9b9b9;">
+        <div class="container-narrow" style="max-width: 1050px; padding: 0px 10px; border-left: 1px solid #b9b9b9; background-color: white; border-right: 1px solid #b9b9b9;">
             <div class="header">
                 <ul class="nav nav-pills pull-right" style="margin-top: 25px;">
                     <li class="welcome"> <a href="#"  > Welcome Trader <b>#{traderBean.trader.login} </b> </a> </li>
@@ -61,7 +61,7 @@
                 <div id="collapsableSearch" class="collapse" style="margin-top: 2%;">
                         <form class="form-inline">
                             <div class="pull-left">
-                                <label class="control-label" for="priceLow" style="width: 150px;"><b>Price:</b></label> 
+                                <label class="control-label" for="priceLow" style="width: 150px;"><b>Price ($):</b></label> 
                                 <input type="text" id="priceLow" style="width: 100px;"></input> 
                                 to <input type="text" id="priceHigh" style="width: 100px;"></input>
                             </div>
@@ -168,7 +168,7 @@
                 var str = '<tr ';
                 if (c[1] % 2 == 0)
                     str += 'style="background-color:#ACFCC4;"';
-                str+= '> <td><button class="buyButton" data-id="' + b.id +'" > BUY</button></td><td>' + b.issuer + '</td><td>' + cusip + '</td><td>' + b.price + '</td><td>' + b.parValue + '</td><td>' + b.coupon +'</td><td>' + b.currentYield +'</td><td>' + b.yieldToMaturity +'</td><td>' + b.quantity +'</td><td>' + b.ratingMoodysString +'</td><td>' + b.ratingSnpString +'</td><td style="text-align:right;">' + value.toFixed(2) +'</td></tr> ';
+                str+= '> <td><button class="buyButton" data-id="' + b.id +'" > BUY</button></td><td>' + b.issuer + '</td><td>' + cusip + '</td><td>' + (b.price).formatMoney(2) + '</td><td>' + b.parValue + '</td><td>' + b.coupon +'</td><td>' + b.currentYield +'</td><td>' + b.yieldToMaturity +'</td><td>' + b.quantity +'</td><td>' + b.ratingMoodysString +'</td><td>' + b.ratingSnpString +'</td><td style="text-align:right;">' + (value).formatMoney(2) +'</td></tr> ';
                 return str;
             }
             
@@ -364,7 +364,7 @@
             }
                                   
             $(function(){
-                $("#clientBalance").html("$" + (#{clientBean.client.balance}).toFixed(2));
+                $("#clientBalance").html((#{clientBean.client.balance}).formatMoney(2));
                 loadFreeBonds();
                 loadLocations();
                 setLocation(1);

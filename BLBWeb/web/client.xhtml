@@ -20,7 +20,7 @@
 
     <h:body>
 
-        <div class="container-narrow" style="max-width: 950px; padding: 0px 10px; border-left: 1px solid #b9b9b9; background-color: white; border-right: 1px solid #b9b9b9;">
+        <div class="container-narrow" style="max-width: 1050px; padding: 0px 10px; border-left: 1px solid #b9b9b9; background-color: white; border-right: 1px solid #b9b9b9;">
             <div class="header">
                 <ul class="nav nav-pills pull-right" style="margin-top: 25px;">
                     <li class="welcome"> <a href="#"  > Welcome Trader <b>#{traderBean.trader.login} </b> </a> </li>
@@ -86,7 +86,7 @@
                 var str = '<tr ';
                 if (c[1] % 2 == 0)
                     str += 'style="background-color:#ACFCC4;"'
-                str += '><td>' + cusip + '</td><td>'+ b.issuer+'</td><td> <button class="sellButton" data-id="' + b.id +'" > SELL</button> </td><td>' + b.price + '</td><td>' + b.parValue + '</td><td>' + b.coupon +'</td><td>' + b.currentYield +'</td><td>' + b.yieldToMaturity +'</td><td>' + b.ratingMoodysString +'</td><td>' + b.ratingSnpString +'</td><td>' + b.quantity +'</td><td>' + b.boughtOn + '</td><td>' + value +'</td></tr> ';
+                str += '><td>' + cusip + '</td><td>'+ b.issuer+'</td><td> <button class="sellButton" data-id="' + b.id +'" > SELL</button> </td><td>' + (b.price).formatMoney(2) + '</td><td>' + b.parValue + '</td><td>' + b.coupon +'</td><td>' + b.currentYield +'</td><td>' + b.yieldToMaturity +'</td><td>' + b.ratingMoodysString +'</td><td>' + b.ratingSnpString +'</td><td>' + b.quantity +'</td><td>' + b.boughtOn + '</td><td>' + (value).formatMoney(2) +'</td></tr> ';
                 return str;
             }
             
@@ -110,7 +110,7 @@
                 for (var i in array){
                     s+=array[i].price * array[i].quantity;
                 }
-                $('#totalValue').text(s.toFixed(2));
+                $('#totalValue').text(s.formatMoney(2));
             }
             
             function loadClientBonds(){
@@ -134,7 +134,8 @@
             
             
             $(function(){
-                $("#clientBalance").html("$" + (#{clientBean.client.balance}).toFixed(2));
+                $("#clientBalance").html((#{clientBean.client.balance}).formatMoney(2));
+                //$("#clientBalance").html("$" + (#{clientBean.client.balance}).toFixed(2));
                 loadClientBonds();
             });
             
