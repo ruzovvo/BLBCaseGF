@@ -31,40 +31,68 @@
                 <ul class="nav nav-tabs">
                     <li><a href="javascript: void();" onclick="window.location.href = 'client.xhtml?clientId=' + gup('clientId')"  >Portfolio</a></li>
                     <li class="active" ><a href="javascript: void();" onclick="window.location.href = 'buy.xhtml?clientId=' + gup('clientId')" >Buy</a></li>
-                    <li><a href="javascript: void();" ><span style="color: lightgray;">Sell</span></a></li>
+                    <li class="pull-right">
+                          <!--Dropdown button 1-->
+                          <div class="btn-group"> 
+                            <div class="btn-group"> 
+                              <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="width: 150px;" id="countryName">
+                                United Kingdom
+                                <span class="caret pull-right"></span>
+                              </a>
+                              <ul class="dropdown-menu" id="countryList">
+                              </ul>
+                            </div>
+                            <!--Dropdown button 2-->
+                            <div class="btn-group"> 
+                              <a class="btn dropdown-toggle text-left" data-toggle="dropdown" href="#" style="width: 150px;">
+                                Bank holidays:
+                                <span class="caret pull-right"></span>
+                              </a>
+                              <ul class="dropdown-menu" id="holidayList">
+                                <li><a href="#">1 Jan Wednesday New Years Day</a></li>
+                                <li><a href="#">...</a></li>
+                              </ul>
+                            </div>
+                            <button class="btn" disabled="true" id="jurDelay"><b>JD: 3</b></button>
+                          </div>
+                    </li>
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane active" id="tab1">
                         <h3>Order Summary</h3>
-                        <div style="display: none; color: red; margin-bottom: 10px;" id="errorBLock" >
+                        <div class="alert alert-error" style="display: none; margin-bottom: 10px;" id="errorBlock" >
                             We are unable to proceed with the transaction as there is insufficient number of bonds available.
                             Please enter the quantity to buy lower than that available and try again.
-
                         </div>
-                        <div style="display: none; color: red; margin-bottom: 10px;" id="errorBLockNotEnoughMoney" >
+                        <div class="alert alert-error" style="display: none; margin-bottom: 10px;" id="errorBlockNotEnoughMoney" >
                             We are unable to proceed with the transaction as your customer's balance is too low.
                             Please enter the quantity to buy lower and try again.
                         </div>
+                        <div class="alert alert-success" style="display: none; margin-bottom: 10px;" id="successBlock" >
+                            PURCHASE APPROVED!
+                        </div>
                         <div class="jumbotron" style="border-radius: 20px; margin-bottom: 10px; border: 2px solid darkgrey; padding: 10px; ">
                             <h:panelGrid columns="3">
+                                <h:panelGroup class="span3">ISSUER: <br/><b>#{bondBean.bond.issuer}</b></h:panelGroup>
                                 <h:panelGroup class="span3">CUSIP: <br/><b>#{bondBean.bond.CUSIP}</b></h:panelGroup>
-                                <h:panelGroup class="span3">Coupon: <br/><b>#{bondBean.bond.coupon}</b></h:panelGroup>
-                                <h:panelGroup class="span3">Quantity Available: <br/><b id="availableQuantity" >#{bondBean.bond.quantity}</b></h:panelGroup>
+                                <h:panelGroup class="span3">Coupon, %: <br/><b>#{bondBean.bond.coupon}</b></h:panelGroup>
+                                <h:panelGroup class="span3">Quantity Available: <br/><b id="quantity" >#{bondBean.bond.quantity}</b></h:panelGroup>
                                 <h:panelGroup class="span3">Price Each: <br/><b id="price">#{bondBean.bond.price}</b></h:panelGroup>
-                                <h:panelGroup class="span3">Current Yield: <br/><b>#{bondBean.bond.currentYield}</b></h:panelGroup>
+                                <h:panelGroup class="span3">Current Yield, %: <br/><b>#{bondBean.bond.currentYield}</b></h:panelGroup>
+                                
+                                <h:panelGroup class="span3">Par Value: <br/><b>#{bondBean.bond.parValue}</b></h:panelGroup>
+                                <h:panelGroup class="span3">Yield To Maturity, %: <br/><b>#{bondBean.bond.yieldToMaturity}</b></h:panelGroup>
+                                <h:panelGroup class="span3">Price Total: <b id="totalPrice">?</b></h:panelGroup>
+                                <h:panelGroup class="span3">Rating Moody's<br/><b>#{bondBean.bond.ratingMoodysString}</b></h:panelGroup>
+                                <h:panelGroup class="span3">Rating SnP <br/><b>#{bondBean.bond.ratingSnpString}</b></h:panelGroup>
                                 <h:panelGroup class="span3">
                                     Please enter Quantity to Buy
-                                    <input type="text" id="qts" style="width: 70%;" />
+                                    <input type="text" id="qts" style="width: 70%;" oninput='showPrice();'/>
                                 </h:panelGroup>
-                                <h:panelGroup class="span3">Par Value: <br/><b>#{bondBean.bond.parValue}</b></h:panelGroup>
-                                <h:panelGroup class="span3">Yield To Maturity: <br/><b>#{bondBean.bond.yieldToMaturity}</b></h:panelGroup>
-                                <h:panelGroup class="span3">Price Total: <b id="totalPrice">?</b></h:panelGroup>
-                                <h:panelGroup class="span3">Rating <br/><b>#{bondBean.bond.ratingMoodys}</b></h:panelGroup>
-                                <h:panelGroup class="span3">Rating <br/><b>#{bondBean.bond.ratingSnp}</b></h:panelGroup>
                             </h:panelGrid>
                         </div>
                         <div style="text-align: right;">
-                            <button class="btn btn-large" onclick="window.location.href = 'buy.xhtml?clientId=' + gup('clientId')" > Cancel Order </button>
+                            <button class="btn btn-large" id="cancelButton" onclick="window.location.href = 'buy.xhtml?clientId=' + gup('clientId')" > Cancel Order </button>
                             <button class="btn btn-large" id="previewButton" onclick="previewOrder()" > Preview Order </button>
                             <button class="btn btn-large" id="confirmButton" style="display: none;" onclick="confirmOrder()" > Confirm Order </button>
                             <button class="btn btn-large" id="returnButton" style="display: none;" onclick="window.location.href = 'client.xhtml?clientId=' + gup('clientId')" > Return to homepage </button>
@@ -101,20 +129,28 @@
                 else    return results[1];
             }
             
-            function previewOrder(){
+           function showPrice(){
                 $('#errorBlock').hide();
-                
                 if (!isNumber($('#qts').val())){
-                    alert("incorrect number");
-                    return;
+                    //alert("incorrect number");
+                    $('#qts').val("");
+                    $('#totalPrice').html("?");
+                    return -1;
                 }
-                var available = $('#availableQuantity').text().trim() * 1;
+                var quantity = $('#quantity').text().trim() * 1;
                 var qts = $('#qts').val() * 1;
-                $('#totalPrice').html(qts * $('#price').text().trim());
-                if (qts > available){
-                    $('#errorBLock').show();
-                    return;
+                $('#totalPrice').html((qts * $('#price').text().trim()).toFixed(2));
+                if (qts > quantity){
+                    $('#errorBlock').show();
+                    return -1;
                 }
+                return 0;
+            }
+            
+            function previewOrder(){
+                var res = showPrice();
+                if (res == -1)
+                    return;
                 $('#qts').prop('disabled', true);
                 $('#errorBlock').hide();
                 $('#previewButton').hide();
@@ -130,6 +166,7 @@
                         //console.log(data.data);
                         if (de != undefined){
                             $('#summary').html("Order Summary: Purchase Approved");
+                            $('#successBlock').show();
                             $('#returnButton').show();
                             $('#confirmButton').hide();
                             $('#cancelButton').hide();
@@ -142,8 +179,93 @@
                 });
             }
             
-            $(function(){
+             function setLocation(countryId){
+                $.ajax({
+                    url: "/BLBWeb/resources/admin/getCountryInfo?countryId=" + countryId,
+                    success: function(data){
+                        de = data.data;
+                        if (de != undefined){
+                            $('#resultBlock').show();
+                            $('#countryName').html(de.countryName + '<span class="caret pull-right"></span>');
+                            $('#jurDelay').html('<b>JD: ' + de.jurDelay + '</b>');
+                            $.ajax({
+                                url: "/BLBWeb/resources/admin/getHolidays?countryId=" + countryId,
+                                success: function(data1){
+                                    de1 = data1.data;
+                                    if (de1 != undefined){
+                                        var list = "";
+                                        for (var i in de1){
+                                            var date = new Date(de1[i].holidayDate);
+                                            list += '<li><a href="#">' + de1[i].holidayName + ' ' + formatDate(date) + '</a></li>'
+                                        }
+                                        $('#holidayList').html(list);
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
                 
+            }
+            
+            function formatDate(d)
+            {
+                var d_names = new Array("Sun", "Mon", "Tue",
+                              "Wed", "Thu", "Fri", "Sat");
+
+                var m_names = new Array("Jan", "Feb", "Mar", 
+                "Apr", "May", "Jun", "Jul", "Aug", "Sep", 
+                "Oct", "Nov", "Dec");
+
+                var curr_day = d.getDay();
+                var curr_date = d.getDate();
+                var sup = "";
+                if (curr_date == 1 || curr_date == 21 || curr_date ==31)
+                   {
+                   sup = "st";
+                   }
+                else if (curr_date == 2 || curr_date == 22)
+                   {
+                   sup = "nd";
+                   }
+                else if (curr_date == 3 || curr_date == 23)
+                   {
+                   sup = "rd";
+                   }
+                else
+                   {
+                   sup = "th";
+                   }
+                var curr_month = d.getMonth();
+                var curr_year = d.getFullYear();
+
+                return (d_names[curr_day] + " " + curr_date + "<SUP>"
+                + sup + "</SUP> " + m_names[curr_month] + " " + curr_year);
+            }
+            
+            function loadLocations()
+            {
+                $.ajax({
+                    url: "/BLBWeb/resources/admin/getCountries",
+                    success: function(data){
+                        de = data.data;
+                        if (de != undefined){
+                            $('#resultBlock').show();
+                            console.log(de);
+                            var list = "";
+                            for (var i in de){
+                                //console.log("");
+                                list += '<li><a href="#" onclick="setLocation(' + de[i].id +')">' + de[i].countryName + '</a></li>';
+                            }
+                            $('#countryList').html(list);
+                        }
+                    }
+                });
+            }
+            
+            $(function(){
+                loadLocations();
+                setLocation(1);
             });
             
             //]]>

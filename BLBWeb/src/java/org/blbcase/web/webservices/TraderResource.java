@@ -4,6 +4,7 @@
  */
 package org.blbcase.web.webservices;
 
+import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.servlet.http.HttpServletRequest;
@@ -12,6 +13,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import org.blbcase.core.enums.UserTypeEnum;
 import org.blbcase.core.exceptions.BLBException;
+import org.blbcase.core.jpa.entity.Holiday;
 import org.blbcase.core.jpa.entity.User;
 import org.blbcase.core.json.additionals.BLBExceptionWrapper;
 import org.blbcase.core.json.additionals.JsonResponse;
@@ -41,6 +43,15 @@ public class TraderResource {
      * Creates a new instance of TraderResource
      */
     public TraderResource() {
+    }
+    
+    @GET
+    @Produces("application/json")
+    @Path("getClients")
+    public String getClientsList(String s) {
+        List<User> users = userMan.getAllClients();
+        JsonResponse<List<User>> jr = new JsonResponse<List<User>>(ResponseConstants.OK, null, users);
+        return SimpleResponseWrapper.getJsonResponse(jr);
     }
 
     @GET

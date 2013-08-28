@@ -33,6 +33,10 @@ public class CountryManager implements CountryManagerLocal {
         String query = "select h from Holiday h where h.countryId = '" + id + "'";
         Query q = em.createQuery(query);
         List<Holiday> list = q.getResultList();
+        /*for(Holiday h in list)
+        {
+            h.
+        }*/
         System.out.println("Holidays for " + id + " amount: " + list.size());
         return list;
     }

@@ -34,6 +34,8 @@ public class Bond implements Serializable {
     private int bondId;
     private String issuer;
 
+    private String ratingMoodysString;
+    private String ratingSnpString;
     public Bond() {
     }
 
@@ -163,6 +165,22 @@ public class Bond implements Serializable {
 
     public void setBondId(int bondId) {
         this.bondId = bondId;
+    }
+
+    public String getRatingMoodysString() {
+        return ratingMoodysString;
+    }
+
+    public void setRatingMoodysString(String ratingMoodysString) {
+        this.ratingMoodysString = ratingMoodysString;
+    }
+
+    public String getRatingSnpString() {
+        return ratingSnpString;
+    }
+
+    public void setRatingSnpString(String ratingSnpString) {
+        this.ratingSnpString = ratingSnpString;
     }
 
     @Override
