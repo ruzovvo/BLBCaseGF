@@ -60,6 +60,7 @@ public class TraderResource {
     public String getClientInfo(@QueryParam("login") String login, @QueryParam("password") String password) {
         try {
             //checking rights here
+            System.out.println("check auth data");
             Boolean b = userMan.checkLoginData(login, password);
             if (!b) {
                 throw new BLBException("incorrect pair login/password");

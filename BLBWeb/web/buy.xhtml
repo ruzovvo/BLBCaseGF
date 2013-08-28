@@ -25,13 +25,13 @@
                     <li class="welcome"> <a href="#"  > Welcome Trader <b>#{traderBean.trader.login} </b> </a> </li>
                     <li><a href="javascript: void()" onclick="logout();">Log Out</a></li>
                 </ul>
-                <span style="display: inline-block; margin-top: 22px; padding: 10px 0px; ">Client:<b>#{clientBean.client.login} (#{clientBean.client.id})</b> | balance: <b>#{clientBean.client.balance}</b> | <a href="index.xhtml"> Change Client</a></span>
+                <span style="display: inline-block; margin-top: 22px; padding: 10px 0px; ">Client:<b>#{clientBean.client.login} (#{clientBean.client.id})</b> | balance: <b id="clientBalance"></b> | <a href="index.xhtml"> Change Client</a></span>
             </div>
             <div class="tabbable"> <!-- Only required for left/right tabs -->
                 <ul class="nav nav-tabs">
                     <li><a href="javascript: void();" onclick="window.location.href = 'client.xhtml?clientId=' + gup('clientId')"  >Portfolio</a></li>
                     <li class="active" ><a href="javascript: void();" >Buy</a></li>
-                    
+                    <li><a  href="javascript: void();" onclick="window.location.href = 'pending.xhtml?clientId=' + gup('clientId')">Pending</a></li>
                     <li class="pull-right">
                           <!--Dropdown button 1-->
                           <div class="btn-group"> 
@@ -47,11 +47,9 @@
                             <div class="btn-group"> 
                               <a class="btn dropdown-toggle text-left" data-toggle="dropdown" href="#" style="width: 150px;">
                                 Bank holidays:
-                                <span class="caret pull-right"></span>
+                                <span class="caret pull-right" ></span>
                               </a>
-                              <ul class="dropdown-menu" id="holidayList">
-                                <li><a href="#">1 Jan Wednesday New Years Day</a></li>
-                                <li><a href="#">...</a></li>
+                              <ul class="dropdown-menu" id="holidayList" style="min-width: 350px;">
                               </ul>
                             </div>
                             <button class="btn" disabled="true" id="jurDelay"><b>JD: 3</b></button>
@@ -158,7 +156,8 @@
                 else    return results[1];
             }
             
-            function generateTableRow(b){
+            function generateTableRow(c){
+                var b = c[0];
                 if (b == undefined){
                     return "";
                 }
@@ -166,7 +165,11 @@
                 var cusip = "N/A";
                 if (b.CUSIP != undefined)
                     cusip = b.CUSIP;
-                return ' <tr> <td><button class="buyButton" data-id="' + b.id +'" > BUY</button></td><td>' + b.issuer + '</td><td>' + cusip + '</td><td>' + b.price + '</td><td>' + b.parValue + '</td><td>' + b.coupon +'</td><td>' + b.currentYield +'</td><td>' + b.yieldToMaturity +'</td><td>' + b.quantity +'</td><td>' + b.ratingMoodysString +'</td><td>' + b.ratingSnpString +'</td><td style="text-align:right;">' + value.toFixed(2) +'</td></tr> ';
+                var str = '<tr ';
+                if (c[1] % 2 == 0)
+                    str += 'style="background-color:#ACFCC4;"';
+                str+= '> <td><button class="buyButton" data-id="' + b.id +'" > BUY</button></td><td>' + b.issuer + '</td><td>' + cusip + '</td><td>' + b.price + '</td><td>' + b.parValue + '</td><td>' + b.coupon +'</td><td>' + b.currentYield +'</td><td>' + b.yieldToMaturity +'</td><td>' + b.quantity +'</td><td>' + b.ratingMoodysString +'</td><td>' + b.ratingSnpString +'</td><td style="text-align:right;">' + value.toFixed(2) +'</td></tr> ';
+                return str;
             }
             
             function generateTable(array){
@@ -175,7 +178,8 @@
                 }
                 s = ' <tr><th>Select To Buy</th><th>Issuer</th><th>CUSIP</th><th>PRICE</th><th>Par Value</th><th>Coupon %</th><th>Current Yield %</th><th>Yield To Maturity %</th><th>Quantity</th><th>Moodys</th><th>SnP</th><th>Value</th></tr> ';
                 for (var i in array){
-                    s+=generateTableRow(array[i]);
+                    var a = [array[i], i];
+                    s+=generateTableRow(a);
                 }
                 return s;
             }
@@ -209,17 +213,17 @@
                 if ($('#parHigh').val() != "")
                     query += "&parHigh="+$('#parHigh').val();
                 if ($('#couponLow').val() != "")
-                    query += "&couponLow="+($('#couponLow').val() / 100);
+                    query += "&couponLow="+($('#couponLow').val());
                 if ($('#couponHigh').val() != "")
-                    query += "&couponHigh="+($('#couponHigh').val() / 100);
+                    query += "&couponHigh="+($('#couponHigh').val());
                 if ($('#cyLow').val() != "")
-                    query += "&cyLow="+($('#cyLow').val() / 100);
+                    query += "&cyLow="+($('#cyLow').val());
                 if ($('#cyHigh').val() != "")
-                    query += "&cyHigh="+($('#cyHigh').val() / 100);
+                    query += "&cyHigh="+($('#cyHigh').val());
                 if ($('#ytmLow').val() != "")
-                    query += "&ytmLow="+($('#ytmLow').val() / 100);
+                    query += "&ytmLow="+($('#ytmLow').val());
                 if ($('#ytmHigh').val() != "")
-                    query += "&ytmHigh="+($('#ytmHigh').val() / 100);
+                    query += "&ytmHigh="+($('#ytmHigh').val());
                 
                 if ($('#moodyscb').is(':checked'))
                     query += "&moodysLow="+$('#moodysLow').val()+"&moodysHigh="+$('#moodysHigh').val();
@@ -245,7 +249,31 @@
                         de = data.data;
                         if (de != undefined){
                             $('#resultBlock').show();
-                            
+                            var htmltags = "";
+                            for(var i in de)
+                            {
+                                console.log(de[i]);
+                                htmltags += '<option>'+de[i]+'</option>';
+                            }
+                            console.log(htmltags);
+                            $('#moodysLow').html(htmltags);
+                            $('#moodysHigh').html(htmltags);
+                        }
+                    }
+                });
+                $.ajax({
+                    url: "/BLBWeb/resources/admin/getRatingRangeSnp",
+                    success: function(data){
+                        de = data.data;
+                        if (de != undefined){
+                            $('#resultBlock').show();
+                            var htmltags = "";
+                            for(var i in de)
+                            {
+                                htmltags += '<option>'+de[i]+'</option>';
+                            }
+                            $('#snpLow').html(htmltags);
+                            $('#snpHigh').html(htmltags);
                         }
                     }
                 });
@@ -268,7 +296,7 @@
                                         var list = "";
                                         for (var i in de1){
                                             var date = new Date(de1[i].holidayDate);
-                                            list += '<li><a href="#">' + de1[i].holidayName + ' ' + formatDate(date) + '</a></li>'
+                                            list += '<li><a href="#">' + de1[i].holidayName + ' <div class="pull-right">' + formatDate(date) + '</div></a></li>'
                                         }
                                         $('#holidayList').html(list);
                                     }
@@ -336,9 +364,11 @@
             }
                                   
             $(function(){
+                $("#clientBalance").html("$" + (#{clientBean.client.balance}).toFixed(2));
                 loadFreeBonds();
                 loadLocations();
                 setLocation(1);
+                loadRatingRanges();
             });
             
             //]]>

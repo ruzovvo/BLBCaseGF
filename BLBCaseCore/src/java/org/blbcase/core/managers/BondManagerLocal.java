@@ -22,11 +22,17 @@ public interface BondManagerLocal {
      */
     public List<Bond> getClientBonds(Long userId);
     
+    public List<Bond> getClientPendingBonds(Long userId);
+    
     public Bond getBondByCUSIP(String cusip) throws BLBException;
     
     public List<Bond> getFreeBonds();
     
     public Bond getBondById(Long bId);
+    
+    public List<String> getRatingRangeMoodys();
+    
+    public List<String> getRatingRangeSnp();
 
     public void buyFreeBond(Long clientId, Long freeBondId, Integer quantity, Long traderId, Integer jurDelay) throws BLBException;
     

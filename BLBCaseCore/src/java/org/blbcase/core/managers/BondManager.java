@@ -45,7 +45,22 @@ public class BondManager implements BondManagerLocal {
         if (userId == null) {
             list = em.createQuery("select b from Bond b where b.clientId is null  order by b.id desc").getResultList();
         } else {
-            list = em.createQuery("select b from Bond b where b.clientId = :cId order by b.id desc").setParameter("cId", userId).getResultList();
+            list = em.createQuery("select b from Bond b where b.clientId = :cId and b.deliveryOn < :date order by b.id desc").setParameter("cId", userId).setParameter("date", new Date()).getResultList();
+        }
+        if (list == null || list.isEmpty()) {
+            return null;
+        }
+        return list;
+    }
+    
+    @Override
+    public List<Bond> getClientPendingBonds(Long userId) {
+        List<Bond> list = null;
+        Query q = null;
+        if (userId == null) {
+            list = em.createQuery("select b from Bond b where b.clientId is null  order by b.id desc").getResultList();
+        } else {
+            list = em.createQuery("select b from Bond b where b.clientId = :cId and b.deliveryOn > :date order by b.id desc").setParameter("cId", userId).setParameter("date", new Date()).getResultList();
         }
         if (list == null || list.isEmpty()) {
             return null;
@@ -257,5 +272,17 @@ public class BondManager implements BondManagerLocal {
             }
         }
         return false;
+    }
+    
+    @Override
+    public List<String> getRatingRangeMoodys()
+    {
+        return em.createNativeQuery("select description from ratingmoodys").getResultList();
+    }
+    
+    @Override
+    public List<String> getRatingRangeSnp()
+    {
+        return em.createNativeQuery("select description from ratingsnp").getResultList();
     }
 }

@@ -26,13 +26,13 @@
                     <li class="welcome"> <a href="#"  > Welcome Trader <b>#{traderBean.trader.login} </b> </a> </li>
                     <li><a href="javascript: void()" onclick="logout();">Log Out</a></li>
                 </ul>
-                <span style="display: inline-block; margin-top: 22px; padding: 10px 0px; ">Client:<b>#{clientBean.client.login} (#{clientBean.client.id})</b> | balance: <b id="clientBalance"></b> | <a href="index.xhtml"> Change Client</a></span>
+                <span style="display: inline-block; margin-top: 22px; padding: 10px 0px; ">Client:<b>#{clientBean.client.login} (#{clientBean.client.id})</b> | balance: <b id="clientBalance" style="min-width: 200px;"></b> | <a href="index.xhtml"> Change Client</a></span>
             </div>
             <div class="tabbable"> <!-- Only required for left/right tabs -->
                 <ul class="nav nav-tabs">
-                    <li class="active"><a  >Portfolio</a></li>
+                    <li><a  href="javascript: void();" onclick="window.location.href = 'client.xhtml?clientId=' + gup('clientId')">Portfolio</a></li>
                     <li><a href="javascript: void();" onclick="window.location.href = 'buy.xhtml?clientId=' + gup('clientId')" >Buy</a></li>
-                    <li><a  href="javascript: void();" onclick="window.location.href = 'pending.xhtml?clientId=' + gup('clientId')">Pending</a></li>
+                    <li class="active"><a  >Pending</a></li>
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane active" id="tab1">
@@ -75,7 +75,7 @@
             }
             
             function generateTableRow(c){
-                b = c[0];
+                var b = c[0];
                 if (b == undefined){
                     return "";
                 }
@@ -86,7 +86,7 @@
                 var str = '<tr ';
                 if (c[1] % 2 == 0)
                     str += 'style="background-color:#ACFCC4;"'
-                str += '><td>' + cusip + '</td><td>'+ b.issuer+'</td><td> <button class="sellButton" data-id="' + b.id +'" > SELL</button> </td><td>' + b.price + '</td><td>' + b.parValue + '</td><td>' + b.coupon +'</td><td>' + b.currentYield +'</td><td>' + b.yieldToMaturity +'</td><td>' + b.ratingMoodysString +'</td><td>' + b.ratingSnpString +'</td><td>' + b.quantity +'</td><td>' + b.boughtOn + '</td><td>' + value +'</td></tr> ';
+                str += '><td>' + cusip + '</td><td>'+ b.issuer+'</td><td>' + b.price + '</td><td>' + b.parValue + '</td><td>' + b.coupon +'</td><td>' + b.currentYield +'</td><td>' + b.yieldToMaturity +'</td><td>' + b.ratingMoodysString +'</td><td>' + b.ratingSnpString +'</td><td>' + b.quantity +'</td><td>' + b.boughtOn + '</td><td>' + b.deliveryOn + '</td><td>' + value +'</td></tr> ';
                 return str;
             }
             
@@ -94,7 +94,7 @@
                 if (array == undefined){
                     return undefined;
                 }
-                s = ' <tr><th>CUSIP</th> <th>ISSUER</th><th>Select To Sell</th><th>PRICE</th><th>Par Value</th><th>Coupon, %</th><th>Current Yield, %</th><th>Yield To Maturity, %</th><th>Rating Moodys</th><th>Rating SnP</th><th>Quantity</th><th>Bought On</th><th>Value</th></tr> ';
+                s = ' <tr><th>CUSIP</th> <th>ISSUER</th><th>PRICE</th><th>Par Value</th><th>Coupon, %</th><th>Current Yield, %</th><th>Yield To Maturity, %</th><th>Rating Moodys</th><th>Rating SnP</th><th>Quantity</th><th>Bought On</th><th>Delivery On</th><th>Value</th></tr> ';
                 for (var i in array){
                     var a = [array[i], i];
                     s+=generateTableRow(a);
@@ -113,9 +113,9 @@
                 $('#totalValue').text(s.toFixed(2));
             }
             
-            function loadClientBonds(){
+            function loadClientPendingBonds(){
                 $.ajax({
-                    url: "/BLBWeb/resources/admin/getClientBonds?clientId="+ gup("clientId"),
+                    url: "/BLBWeb/resources/admin/getClientPendingBonds?clientId="+ gup("clientId"),
                     success: function(data){
                         de = data.data;
                         if (de != undefined){
@@ -135,7 +135,7 @@
             
             $(function(){
                 $("#clientBalance").html("$" + (#{clientBean.client.balance}).toFixed(2));
-                loadClientBonds();
+                loadClientPendingBonds();
             });
             
             //]]>

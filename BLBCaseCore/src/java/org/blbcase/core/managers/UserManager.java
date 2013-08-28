@@ -48,6 +48,8 @@ public class UserManager implements UserManagerLocal {
     public boolean checkLoginData(String login, String password) throws BLBException {
         assertLogin(login);
         assertPassword(password);
+        System.out.println("check auth data");
+
         Query q = em.createQuery("select u from  User u where u.login = :login and u.password = :pass").setParameter("login", login).setParameter("pass", password);
         List<User> list = q.getResultList();
         if (list == null || list.isEmpty()) {

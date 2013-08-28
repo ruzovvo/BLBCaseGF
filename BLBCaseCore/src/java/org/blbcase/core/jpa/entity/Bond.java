@@ -36,6 +36,8 @@ public class Bond implements Serializable {
 
     private String ratingMoodysString;
     private String ratingSnpString;
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    private Date deliveryOn;
     public Bond() {
     }
 
@@ -57,6 +59,16 @@ public class Bond implements Serializable {
         this.ratingSnpString = rat2;
     }
 
+    public Date getDeliveryOn() {
+        return deliveryOn;
+    }
+
+    public void setDeliveryOn(Date deliveryOn) {
+        this.deliveryOn = deliveryOn;
+    }
+
+    
+    
     public Long getId() {
         return id;
     }

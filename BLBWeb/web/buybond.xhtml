@@ -25,12 +25,13 @@
                     <li class="welcome"> <a href="#"  > Welcome Trader <b>#{traderBean.trader.login} </b> </a> </li>
                     <li><a href="javascript: void()" onclick="logout();">Log Out</a></li>
                 </ul>
-                <span style="display: inline-block; margin-top: 22px; padding: 10px 0px; ">Client:<b>#{clientBean.client.login} (#{clientBean.client.id})</b> | balance: <b>#{clientBean.client.balance}</b> | <a href="index.xhtml"> Change Client</a></span>
+                <span style="display: inline-block; margin-top: 22px; padding: 10px 0px; ">Client:<b>#{clientBean.client.login} (#{clientBean.client.id})</b> | balance: <b id="clientBalance"></b> | <a href="index.xhtml"> Change Client</a></span>
             </div>
             <div class="tabbable"> <!-- Only required for left/right tabs -->
                 <ul class="nav nav-tabs">
                     <li><a href="javascript: void();" onclick="window.location.href = 'client.xhtml?clientId=' + gup('clientId')"  >Portfolio</a></li>
                     <li class="active" ><a href="javascript: void();" onclick="window.location.href = 'buy.xhtml?clientId=' + gup('clientId')" >Buy</a></li>
+                    <li><a  href="javascript: void();" onclick="window.location.href = 'pending.xhtml?clientId=' + gup('clientId')">Pending</a></li>
                     <li class="pull-right">
                           <!--Dropdown button 1-->
                           <div class="btn-group"> 
@@ -48,9 +49,8 @@
                                 Bank holidays:
                                 <span class="caret pull-right"></span>
                               </a>
-                              <ul class="dropdown-menu" id="holidayList">
-                                <li><a href="#">1 Jan Wednesday New Years Day</a></li>
-                                <li><a href="#">...</a></li>
+                              <ul class="dropdown-menu" id="holidayList" style="min-width: 350px;">
+                                
                               </ul>
                             </div>
                             <button class="btn" disabled="true" id="jurDelay"><b>JD: 3</b></button>
@@ -131,6 +131,7 @@
             
            function showPrice(){
                 $('#errorBlock').hide();
+                $('#errorBlockNotEnoughMoney').hide();
                 if (!isNumber($('#qts').val())){
                     //alert("incorrect number");
                     $('#qts').val("");
@@ -142,6 +143,11 @@
                 $('#totalPrice').html((qts * $('#price').text().trim()).toFixed(2));
                 if (qts > quantity){
                     $('#errorBlock').show();
+                    return -1;
+                }
+                if ( qts * #{bondBean.bond.price} > #{clientBean.client.balance})
+                {
+                    $('#errorBlockNotEnoughMoney').show();
                     return -1;
                 }
                 return 0;
@@ -196,7 +202,7 @@
                                         var list = "";
                                         for (var i in de1){
                                             var date = new Date(de1[i].holidayDate);
-                                            list += '<li><a href="#">' + de1[i].holidayName + ' ' + formatDate(date) + '</a></li>'
+                                            list += '<li><a href="#">' + de1[i].holidayName + '<div class="pull-right">' + formatDate(date) + '</div></a></li>';
                                         }
                                         $('#holidayList').html(list);
                                     }
@@ -264,6 +270,7 @@
             }
             
             $(function(){
+                $("#clientBalance").html("$" + (#{clientBean.client.balance}).toFixed(2));
                 loadLocations();
                 setLocation(1);
             });

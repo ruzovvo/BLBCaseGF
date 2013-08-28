@@ -114,6 +114,22 @@ public class AdminResource {
 //            return BLBExceptionWrapper.wrapException(e);
 //        }
     }
+    
+    @GET
+    @Produces("application/json")
+    @Path("getClientPendingBonds")
+    public String getClientPendingBonds(@QueryParam("clientId") Long id, @Context HttpServletRequest req) {
+//        try {
+        //checking rights here
+        //TODO: uncomment this method after db creation
+//            SessionUtils.getCurrentUserIdThrowingException(req);
+        List<Bond> list = bMan.getClientPendingBonds(id);
+        JsonResponse<List<Bond>> jr = new JsonResponse<List<Bond>>(ResponseConstants.OK, null, list);
+        return SimpleResponseWrapper.getJsonResponse(jr);
+//        } catch (BLBException e) {
+//            return BLBExceptionWrapper.wrapException(e);
+//        }
+    }
 
     @GET
     @Produces("application/json")
@@ -211,10 +227,18 @@ public class AdminResource {
     @Produces("application/json")
     @Path("getRatingRangeMoodys")
     public String getRatingRangeMoodys(String data){
-        /**
-         * TODO finish getting rating from database
-         */
-        return "";
+        List<String> range = bMan.getRatingRangeMoodys();
+        JsonResponse<List<String>> jr = new JsonResponse<List<String>>(ResponseConstants.OK, null, range);
+        return SimpleResponseWrapper.getJsonResponse(jr);
+    }
+    
+    @GET
+    @Produces("application/json")
+    @Path("getRatingRangeSnp")
+    public String getRatingRangeSnp(String data){
+        List<String> range = bMan.getRatingRangeSnp();
+        JsonResponse<List<String>> jr = new JsonResponse<List<String>>(ResponseConstants.OK, null, range);
+        return SimpleResponseWrapper.getJsonResponse(jr);
     }
     
     @GET
